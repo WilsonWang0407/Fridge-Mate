@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:date_format/date_format.dart';
 import 'helpers/Constants.dart';
@@ -13,6 +14,8 @@ class EditFoodScreen extends StatefulWidget {
 }
 
 class _EditFoodScreenState extends State<EditFoodScreen> {
+
+  bool? isChecked = false;
 
   DateTime selectedDate = DateTime.now();
 
@@ -95,7 +98,7 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
           style: centerBarHintTextStyle,
         ),
         SizedBox(
-          width: 170,
+          width: 180,
           height: 30,
           child: TextField(
             keyboardType: TextInputType.text,
@@ -116,7 +119,7 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
           style: centerBarHintTextStyle,
         ),
         SizedBox(
-          width: 205,
+          width: 210,
           height: 30,
           child: TextField(
             keyboardType: TextInputType.text,
@@ -133,7 +136,7 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Text(
-          'Expiration Date',
+          'Expiration Date:',
           style: centerBarHintTextStyle,
         ),
         SizedBox(
@@ -156,9 +159,63 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
       ],
     );
 
+    final isOpenedRow = Row(
+      children: <Widget>[
+        SizedBox(width: 10),
+        Text(
+          'Is Opened:',
+          style: centerBarHintTextStyle,
+        ),
+        SizedBox(width: 5),
+        Padding(
+          padding: EdgeInsets.only(top: 6),
+          child: Transform.scale(
+            scale: 1.8,
+            child:Checkbox(
+              fillColor: MaterialStateProperty.all<Color>(Colors.white),
+              checkColor: Colors.black,
+              side: BorderSide(
+                color: Colors.transparent,
+              ),
+              value: isChecked,
+              onChanged: (bool? value) {
+                setState(() {
+                  isChecked = value;
+                });
+              },
+            ),
+          ),
+        ),
+      ]
+    );
+
+    final saveButton = SizedBox(
+      width: 100,
+      height: 40,
+      child: OutlinedButton(
+        onPressed: null,
+        style: OutlinedButton.styleFrom(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(1)),
+          ),
+          side: BorderSide(
+            width: 3,
+          ),
+        ),
+        child: Text(
+          'Save',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+
     final centerBar = Container(
       width: 340,
-      height: 380,
+      height: 360,
       decoration: BoxDecoration(
         color: cambridgeBlue,
         border: Border.all(
@@ -171,10 +228,14 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
         children: <Widget>[
           const SizedBox(height: 30),
           foodNameRow,
-          space10,
+          space20,
           quantityRow,
-          space10,
+          space20,
           expiratinDateRow,
+          space10,
+          isOpenedRow,
+          SizedBox(height: 40),
+          saveButton,
         ]
       )
     );

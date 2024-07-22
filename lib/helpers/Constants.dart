@@ -24,6 +24,7 @@ TextStyle backButtonTextStyle = const TextStyle(fontSize: 18, fontWeight: FontWe
 
 // SizedBox
 SizedBox space10 = const SizedBox(height: 10);
+SizedBox space20 = const SizedBox(height: 20);
 SizedBox space80 = const SizedBox(height: 80);
 
 // Decoration

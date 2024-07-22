@@ -24,7 +24,7 @@ class FridgeMate extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: EditFoodScreen(),
+      home: HomeScreen(),
       routes: routes,
     );
   }
