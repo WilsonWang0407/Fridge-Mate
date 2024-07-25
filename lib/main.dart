@@ -1,12 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fridge_mate/MyRecipesScreen.dart';
+import 'package:fridge_mate/firebase_options.dart';
 import 'EditFoodScreen.dart';
 import 'FridgeDetailScreen.dart';
 import 'helpers/Constants.dart';
 import 'LoginScreen.dart';
 import 'HomeScreen.dart';
 
-void main() => runApp(FridgeMate());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(FridgeMate());
+}
 
 class FridgeMate extends StatelessWidget {
 
