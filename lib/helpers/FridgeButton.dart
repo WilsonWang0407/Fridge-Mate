@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'Constants.dart';
+import 'package:flutter/material.dart';
 
 class FridgeButton extends StatelessWidget {
 
@@ -27,7 +27,7 @@ class FridgeButton extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(right: 180),
           child: Text(
-            'Fridge $fridgeNum '.substring(0, 9),
+            'Fridge $fridgeNum '.substring(0, 8),
             maxLines: 1,
             style: TextStyle(
               fontSize: 18,

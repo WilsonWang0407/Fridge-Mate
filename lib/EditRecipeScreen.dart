@@ -1,19 +1,30 @@
 import 'helpers/Constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class FridgeDetailScreen extends StatelessWidget {
-  const FridgeDetailScreen({super.key});
+class EditRecipeScreen extends StatefulWidget {
+  const EditRecipeScreen({super.key});
+
+  @override
+  _EditRecipeScreenState createState() {
+    return _EditRecipeScreenState();
+  }
+}
+
+class _EditRecipeScreenState extends State<EditRecipeScreen> {
 
   @override
   Widget build(BuildContext context) {
 
-    final topBar = Stack(
+     final topBar = Stack(
       children: <Widget>[
         Positioned(
           left: 0,
           top: 5,
           child: TextButton(
-            onPressed: null,
+            onPressed: () {
+              Navigator.of(context).pushNamed(myRecipesScreenTag);
+            },
             child: Text(
               '<Back',
               style: backButtonTextStyle,
@@ -24,7 +35,7 @@ class FridgeDetailScreen extends StatelessWidget {
           child: TextButton(
             onPressed: null,
             child: Text(
-              'Fridge Name',
+              'Recipe Name',
               style: bigButtonTextStyle,
             ),
           ),
@@ -40,32 +51,32 @@ class FridgeDetailScreen extends StatelessWidget {
       ),
     );
 
-    final addNewFoodButton = SizedBox(
-      width: 300,
+    final takePictureButton = SizedBox(
+      width: 250,
       height: 60,
       child: OutlinedButton(
         onPressed: null,
         style: OutlinedButton.styleFrom(
-          backgroundColor: cambridgeBlue,
+          backgroundColor: delftBlue,
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(32)),
-          ),
-          side: BorderSide(
-            width: 2.5,
-            color: Colors.black,
+            borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
         ),
         child: Text(
-          '+  Add New Food',
-          style: bigButtonTextStyle,
+          'Take Picture',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
       ),
     );
 
-    final listTitle = Padding(
+    final ingredientTitle = Padding(
       padding: const EdgeInsets.only(right: 150),
       child: Text(
-        'List of Food',
+        'Ingredients',
         style: listTitleTextStyle,
       ),
     );
@@ -78,9 +89,9 @@ class FridgeDetailScreen extends StatelessWidget {
           topBar,
           underline,
           space80,
-          addNewFoodButton,
+          takePictureButton,
           space80,
-          listTitle,
+          ingredientTitle,
         ]
       )
     );

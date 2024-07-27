@@ -1,12 +1,16 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:fridge_mate/MyRecipesScreen.dart';
-import 'package:fridge_mate/firebase_options.dart';
+import 'package:fridge_mate/EditRecipeScreen.dart';
+
 import 'EditFoodScreen.dart';
 import 'FridgeDetailScreen.dart';
-import 'helpers/Constants.dart';
-import 'LoginScreen.dart';
 import 'HomeScreen.dart';
+import 'LoginScreen.dart';
+import 'MyRecipesScreen.dart';
+import 'ProfileScreen.dart';
+import 'firebase_options.dart';
+import 'helpers/Constants.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,11 +23,13 @@ Future<void> main() async {
 class FridgeMate extends StatelessWidget {
 
   final routes = <String, WidgetBuilder> {
-    loginScreenTag: (context) => const LoginScreen(),
-    homeScreenTag: (context) => const HomeScreen(),
-    fridgeDetailScreenTag: (context) => const FridgeDetailScreen(),
     editFoodScreenTag: (context) => const EditFoodScreen(),
+    editRecipeScreenTag: (context) => const EditRecipeScreen(),
+    fridgeDetailScreenTag: (context) => const FridgeDetailScreen(),
+    homeScreenTag: (context) => const HomeScreen(),
+    loginScreenTag: (context) => const LoginScreen(),
     myRecipesScreenTag: (context) => const MyRecipesScreen(),
+    profileScreenTag: (context) => const ProfileScreen(),
   };
 
   FridgeMate({super.key});
@@ -32,7 +38,7 @@ class FridgeMate extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: EditRecipeScreen(),
       routes: routes,
     );
   }

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'helpers/FridgeButton.dart';
 import 'helpers/Constants.dart';
+import 'helpers/FridgeButton.dart';
+import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -93,7 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
           style: bigButtonTextStyle,
         ),
         TextButton(
-          onPressed: null,
+          onPressed: () {
+            Navigator.of(context).pushNamed(profileScreenTag);
+          },
           child: Text(
             'Profile',
             style: bigButtonTextStyle,

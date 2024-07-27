@@ -1,8 +1,8 @@
 import 'helpers/Constants.dart';
 import 'package:flutter/material.dart';
 
-class FridgeDetailScreen extends StatelessWidget {
-  const FridgeDetailScreen({super.key});
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,9 @@ class FridgeDetailScreen extends StatelessWidget {
           left: 0,
           top: 5,
           child: TextButton(
-            onPressed: null,
+            onPressed: () {
+              Navigator.of(context).pushNamed(homeScreenTag);
+            },
             child: Text(
               '<Back',
               style: backButtonTextStyle,
@@ -24,7 +26,7 @@ class FridgeDetailScreen extends StatelessWidget {
           child: TextButton(
             onPressed: null,
             child: Text(
-              'Fridge Name',
+              'Profile',
               style: bigButtonTextStyle,
             ),
           ),
@@ -40,36 +42,6 @@ class FridgeDetailScreen extends StatelessWidget {
       ),
     );
 
-    final addNewFoodButton = SizedBox(
-      width: 300,
-      height: 60,
-      child: OutlinedButton(
-        onPressed: null,
-        style: OutlinedButton.styleFrom(
-          backgroundColor: cambridgeBlue,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(32)),
-          ),
-          side: BorderSide(
-            width: 2.5,
-            color: Colors.black,
-          ),
-        ),
-        child: Text(
-          '+  Add New Food',
-          style: bigButtonTextStyle,
-        ),
-      ),
-    );
-
-    final listTitle = Padding(
-      padding: const EdgeInsets.only(right: 150),
-      child: Text(
-        'List of Food',
-        style: listTitleTextStyle,
-      ),
-    );
-
     return Scaffold(
       backgroundColor: eggShell,
       body: Column(
@@ -78,9 +50,6 @@ class FridgeDetailScreen extends StatelessWidget {
           topBar,
           underline,
           space80,
-          addNewFoodButton,
-          space80,
-          listTitle,
         ]
       )
     );
