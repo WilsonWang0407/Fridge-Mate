@@ -1,6 +1,8 @@
+import 'package:flutter/widgets.dart';
+
+import 'helpers/IngredientBar.dart';
 import 'helpers/Constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class EditRecipeScreen extends StatefulWidget {
   const EditRecipeScreen({super.key});
@@ -12,6 +14,57 @@ class EditRecipeScreen extends StatefulWidget {
 }
 
 class _EditRecipeScreenState extends State<EditRecipeScreen> {
+
+  List<Widget> ingredientBarList = [];
+  int ingredientNumCounter = 1;
+
+  void initState() {
+    ingredientBarList = [
+      ingredientList(),
+      addNewIngredient(), 
+    ];
+    super.initState();
+  }
+
+  Widget addNewIngredient() {
+    return SizedBox(
+      height: 35,
+      child: OutlinedButton(
+        onPressed: () {
+          setState(() {
+             ingredientBarList.insert(ingredientBarList.length - 2, IngredientBar(ingredientNum: ingredientNumCounter));
+            ingredientBarList.insert(ingredientBarList.length - 2, space10);
+            ingredientNumCounter++;
+          });
+        },
+        style: OutlinedButton.styleFrom(
+          backgroundColor: cambridgeBlue,
+          shape: CircleBorder(),
+          side: BorderSide(
+            width: 2.5,
+            color: Colors.black,
+          ),
+        ),
+        child:Align(
+          alignment: Alignment.center,
+          child: Text(
+          '+',
+          style: listTitleTextStyle,
+        ),
+        ),
+      ),
+    );
+  }
+
+  Widget ingredientList() {
+    return ListView(
+      shrinkWrap: true,
+      padding: const EdgeInsets.only(left:40, right: 40),
+      children: <Widget>[
+        ...ingredientBarList,
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +134,57 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
       ),
     );
 
+    final descriptionTitle = Padding(
+      padding: const EdgeInsets.only(right: 150),
+      child: Text(
+        'Description',
+        style: listTitleTextStyle,
+      ),
+    );
+
+    final descriptionField =  Container(
+      width: 300,
+      height: 100,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          width: 2,
+          color: Colors.black,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+      ),
+      child: TextField(
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
+        style: centerBarInputTextStyle,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+        ),
+      ),
+    );
+
+    final saveButton = SizedBox(
+      width: 100,
+      height: 40,
+      child: OutlinedButton(
+        onPressed: null,
+        style: OutlinedButton.styleFrom(
+          backgroundColor: delftBlue,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(1)),
+          ),
+        ),
+        child: Text(
+          'Save',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+
     return Scaffold(
       backgroundColor: eggShell,
       body: Column(
@@ -88,10 +192,21 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
           space80,
           topBar,
           underline,
-          space80,
+          space50,
           takePictureButton,
-          space80,
+          space50,
           ingredientTitle,
+          space5,
+          SizedBox(
+            height: 220,
+            child: ingredientList(),
+          ),
+          SizedBox(height: 40),
+          descriptionTitle,
+          space5,
+          descriptionField,
+          SizedBox(height: 30),
+          saveButton,
         ]
       )
     );
