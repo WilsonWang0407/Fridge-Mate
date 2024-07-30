@@ -1,6 +1,5 @@
-import 'package:fridge_mate/EditRecipeScreen.dart';
-
 import 'EditFoodScreen.dart';
+import 'EditRecipeScreen.dart';
 import 'FridgeDetailScreen.dart';
 import 'HomeScreen.dart';
 import 'LoginScreen.dart';
@@ -38,7 +37,7 @@ class FridgeMate extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: EditRecipeScreen(),
+      home: ProfileScreen(),
       routes: routes,
     );
   }

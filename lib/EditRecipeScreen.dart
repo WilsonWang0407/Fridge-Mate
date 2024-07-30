@@ -201,11 +201,11 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
             height: 220,
             child: ingredientList(),
           ),
-          SizedBox(height: 40),
+          space30,
           descriptionTitle,
           space5,
           descriptionField,
-          SizedBox(height: 30),
+          space30,
           saveButton,
         ]
       )

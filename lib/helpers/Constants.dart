@@ -29,6 +29,7 @@ TextStyle listTitleTextStyle = const TextStyle(fontSize: 20, fontWeight: FontWei
 SizedBox space5 = const SizedBox(height: 5);
 SizedBox space10 = const SizedBox(height: 10);
 SizedBox space20 = const SizedBox(height: 20);
+SizedBox space30 = const SizedBox(height: 30);
 SizedBox space50 = const SizedBox(height: 50);
 SizedBox space80 = const SizedBox(height: 80);
 
