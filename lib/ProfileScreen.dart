@@ -153,7 +153,9 @@ class ProfileScreen extends StatelessWidget {
       width: 150,
       height: 50,
       child:OutlinedButton(
-        onPressed: null,
+        onPressed: () {
+          Navigator.of(context).pushNamed(loginScreenTag);
+        },
         style: OutlinedButton.styleFrom(
           backgroundColor: burstSienna,
           shape: const RoundedRectangleBorder(

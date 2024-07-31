@@ -9,6 +9,7 @@ const loginScreenTag = 'Login Screen';
 const myRecipesScreenTag = 'My Recipes Screen';
 const profileScreenTag = 'Profile Screen';
 const recipeDetailScreenTag = 'Recipe Detail Screen';
+const recipesScreenTag = 'Recipes Screen';
 
 // Color
 Color burstSienna = const Color.fromARGB(255, 224, 122, 95);

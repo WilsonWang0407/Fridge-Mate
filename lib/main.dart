@@ -5,6 +5,7 @@ import 'HomeScreen.dart';
 import 'LoginScreen.dart';
 import 'MyRecipesScreen.dart';
 import 'ProfileScreen.dart';
+import 'RecipesScreen.dart';
 import 'firebase_options.dart';
 import 'helpers/Constants.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,6 +30,7 @@ class FridgeMate extends StatelessWidget {
     loginScreenTag: (context) => const LoginScreen(),
     myRecipesScreenTag: (context) => const MyRecipesScreen(),
     profileScreenTag: (context) => const ProfileScreen(),
+    recipesScreenTag: (context) => const RecipesScreen(),
   };
 
   FridgeMate({super.key});
@@ -37,7 +39,7 @@ class FridgeMate extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ProfileScreen(),
+      home: HomeScreen(),
       routes: routes,
     );
   }

@@ -69,7 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         TextButton(
-          onPressed: null,
+          onPressed: () {
+              Navigator.of(context).pushNamed(recipesScreenTag);
+          },
           child: Text(
             'Recipes',
             style: bigButtonTextStyle,

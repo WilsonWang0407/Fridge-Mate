@@ -84,7 +84,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
           child: TextButton(
             onPressed: null,
             child: Text(
-              'Recipes',
+              'My Recipes',
               style: bigButtonTextStyle,
             ),
           ),
