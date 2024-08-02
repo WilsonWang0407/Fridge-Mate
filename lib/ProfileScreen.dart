@@ -17,7 +17,13 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   File? _imageFile;
   String? _imageUrl;
+<<<<<<< HEAD
   final _picker = ImagePicker();
+=======
+  String _userName = '';
+  final _picker = ImagePicker();
+  final _nameController = TextEditingController();
+>>>>>>> 07e0572 (feature: editable profile image & user name)
 
   @override
   void initState() {
@@ -25,7 +31,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadProfilePicture();
   }
 
+<<<<<<< HEAD
    Future<void> _pickImage() async {
+=======
+  Future<void> _pickImage() async {
+>>>>>>> 07e0572 (feature: editable profile image & user name)
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
     if(pickedFile != null) {
@@ -37,7 +47,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _uploadImage() async {
+<<<<<<< HEAD
     if(_imageFile == null) return;
+=======
+    if (_imageFile == null) return;
+>>>>>>> 07e0572 (feature: editable profile image & user name)
 
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -56,10 +70,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _imageUrl = downloadUrl;
       });
 
+<<<<<<< HEAD
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .set({'profilePictureUrl': downloadUrl}, SetOptions(merge: true));
+=======
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'profilePictureUrl': downloadUrl,
+        'userName': _nameController.text,
+      }, SetOptions(merge: true));
+>>>>>>> 07e0572 (feature: editable profile image & user name)
     } catch (e) {
       print('Error uploading image: $e');
     }
@@ -78,6 +99,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if(userDoc.exists) {
         setState(() {
           _imageUrl = userDoc.data()?['profilePictureUrl'] as String?;
+<<<<<<< HEAD
+=======
+          _userName = userDoc.data()?['userName'] as String? ?? '';
+          _nameController.text = _userName;
+>>>>>>> 07e0572 (feature: editable profile image & user name)
         });
       }
     } catch (e) {
@@ -85,6 +111,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+<<<<<<< HEAD
+=======
+  Future<void> _saveProfile() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'userName': _nameController.text,
+      }, SetOptions(merge: true));
+
+      setState(() {
+        _userName = _nameController.text;
+      });
+    } catch (e) {
+      print('Error saving profile: $e');
+    }
+  }
+
+>>>>>>> 07e0572 (feature: editable profile image & user name)
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
@@ -134,7 +180,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           shape: BoxShape.circle,
           border: Border.all(
             color: Colors.black,
+<<<<<<< HEAD
             width: 3,
+=======
+            width: 2,
+>>>>>>> 07e0572 (feature: editable profile image & user name)
           ),
         ),
         child: CircleAvatar(
@@ -156,6 +206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final userName = SizedBox(
       width: 200,
       child: TextField(
+        controller: _nameController,
         style: listTitleTextStyle,
         maxLines: 1,
         textAlign: TextAlign.center,
@@ -173,6 +224,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
+        onChanged: (text) async {
+          await _saveProfile();
+        },
       ),
     );
 
@@ -259,7 +313,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child:OutlinedButton(
         onPressed: () async {
           await FirebaseAuth.instance.signOut();
+<<<<<<< HEAD
           Navigator.of(context).pushReplacementNamed(loginScreenTag);
+=======
+          Navigator.of(context).pushNamed(loginScreenTag);
+>>>>>>> 07e0572 (feature: editable profile image & user name)
         },
         style: OutlinedButton.styleFrom(
           backgroundColor: burstSienna,
