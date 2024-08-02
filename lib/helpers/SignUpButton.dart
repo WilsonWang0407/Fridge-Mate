@@ -3,13 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignUpButton extends StatelessWidget {
-  final String email;
-  final String password;
+  final String Function() emailProvider;
+  final String Function() passwordProvider;
 
   const SignUpButton({
     super.key,
-    required this.email,
-    required this.password,
+    required this.emailProvider,
+    required this.passwordProvider,
   });
 
   Future<void> _signUp(BuildContext context) async {
@@ -17,8 +17,8 @@ class SignUpButton extends StatelessWidget {
 
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+        email: emailProvider(),
+        password: passwordProvider(),
       );
       Navigator.of(context).pushNamed(homeScreenTag);
       ScaffoldMessenger.of(context).showSnackBar(

@@ -163,12 +163,12 @@ class _LoginScreenState extends State<LoginScreen> {
           const SizedBox(height: 40),
           signUpButtonSelected
             ? SignUpButton(
-              email: emailController.text,
-              password: passwordController.text,
+              emailProvider: () => emailController.text,
+              passwordProvider: () => passwordController.text,
             )
             : SignInButton(
-              email: emailController.text,
-              password: passwordController.text,
+              emailProvider: () => emailController.text,
+              passwordProvider: () => passwordController.text,
             ),
           const SizedBox(height: 30),
           forgetPasswordButton,
