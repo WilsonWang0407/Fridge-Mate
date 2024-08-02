@@ -9,9 +9,38 @@ class FridgeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final fridgeNameRow = Text(
+      'Fridge $fridgeNum',
+      maxLines: 1,
+      style: TextStyle(
+        fontSize: 30,
+        fontWeight: FontWeight.w500,
+        color: Colors.black,
+      ),
+    );
+
+    final usersRow = Text(
+      'Users: ',
+      maxLines: 1,
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        color: delftBlue,
+      ),
+    );
+
+    final itemRows = Text(
+      'Items:',
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        color: Colors.black,
+      ),
+    );
+
     return SizedBox(
       width: 300,
-      height: 40,
+      height: 500,
       child: OutlinedButton(
         onPressed: null,
         style: OutlinedButton.styleFrom(
@@ -24,16 +53,18 @@ class FridgeButton extends StatelessWidget {
             color: Colors.black,
           )
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(right: 180),
-          child: Text(
-            'Fridge $fridgeNum '.substring(0, 8),
-            maxLines: 1,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            ),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 15),
+              fridgeNameRow,
+              space5,
+              usersRow,
+              space20,
+              itemRows,
+            ],
           ),
         ),
       ),

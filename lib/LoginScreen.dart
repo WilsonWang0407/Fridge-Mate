@@ -1,4 +1,6 @@
 import 'helpers/Constants.dart';
+import 'helpers/SignInButton.dart';
+import 'helpers/SignUpButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,26 +14,36 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   bool passwordVisible = true;
+  bool signUpButtonSelected = false;
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
-  Widget build(BuildContext context){
-
+  Widget build(BuildContext context) {
     final logo = CircleAvatar(
       backgroundColor: Colors.transparent,
       radius: 60,
       child: appLogo,
     );
 
-    final signInUpButtonRow =  Row(
+    final signInUpButtonRow = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        TextButton(
-          onPressed: null,
-          child: Text(
-            'SIGN IN',
-            style: bigButtonTextStyle,
+        SizedBox(
+          child: TextButton(
+            onPressed: () {
+              setState(() {
+                signUpButtonSelected = false;
+              });
+            },
+            child: Text(
+              'SIGN IN',
+              style: signUpButtonSelected
+                  ? bigButtonTextStyle.copyWith(color: Colors.grey)
+                  : bigButtonTextStyle,
+            ),
           ),
         ),
         Text(
@@ -39,10 +51,16 @@ class _LoginScreenState extends State<LoginScreen> {
           style: bigButtonTextStyle,
         ),
         TextButton(
-          onPressed: null,
+          onPressed: () {
+            setState(() {
+              signUpButtonSelected = true;
+            });
+          },
           child: Text(
             'SIGN UP',
-            style: bigButtonTextStyle,
+            style: signUpButtonSelected
+                ? bigButtonTextStyle
+                : bigButtonTextStyle.copyWith(color: Colors.grey),
           ),
         ),
       ],
@@ -59,7 +77,8 @@ class _LoginScreenState extends State<LoginScreen> {
           width: 230,
           height: 30,
           child: TextField(
-            keyboardType: TextInputType.text,
+            controller: emailController,
+            keyboardType: TextInputType.emailAddress,
             style: centerBarInputTextStyle,
             maxLines: 1,
             inputFormatters: [LengthLimitingTextInputFormatter(64)],
@@ -80,55 +99,35 @@ class _LoginScreenState extends State<LoginScreen> {
           width: 180,
           height: 30,
           child: TextField(
+            controller: passwordController,
             keyboardType: TextInputType.text,
             style: centerBarInputTextStyle,
             maxLines: 1,
             inputFormatters: [LengthLimitingTextInputFormatter(128)],
-            obscureText: passwordVisible,
+            obscureText: signUpButtonSelected ? false : passwordVisible,
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
               contentPadding: const EdgeInsets.only(left: 6),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(32)),
-              suffixIcon: IconButton(
-                padding:const EdgeInsets.only(left: 10, top: 1),
-                icon: Icon(
-                  passwordVisible
-                  ? Icons.visibility
-                  : Icons.visibility_off
-                ),
-                onPressed: () {
-                  setState(() {
-                    passwordVisible = !passwordVisible;
-                  });
-                },
-              ),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(32)),
+              suffixIcon: signUpButtonSelected
+                  ? null
+                  : IconButton(
+                      padding: const EdgeInsets.only(left: 10, top: 1),
+                      icon: Icon(passwordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          passwordVisible = !passwordVisible;
+                        });
+                      },
+                    ),
             ),
-          )
+          ),
         ),
       ],
-    );
-
-    final signInButton = SizedBox(
-      width: 150,
-      height: 50,
-      child:OutlinedButton(
-        onPressed: null,
-        style: OutlinedButton.styleFrom(
-          backgroundColor: burstSienna,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(32)),
-          ),
-          side: const BorderSide(
-            width: 2,
-            color: Colors.black,
-          )
-        ),
-        child: Text(
-          'SIGN IN',
-          style: bigButtonTextStyle,
-        ),
-      ),
     );
 
     const forgetPasswordButton = TextButton(
@@ -144,18 +143,17 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     final centerBar = Container(
-      width: 340,
-      height: 380,
-      decoration: BoxDecoration(
-        color: cambridgeBlue,
-        border: Border.all(
-          width: 2.5,
-          color: Colors.black,
+        width: 340,
+        height: 380,
+        decoration: BoxDecoration(
+          color: cambridgeBlue,
+          border: Border.all(
+            width: 2.5,
+            color: Colors.black,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular((30))),
         ),
-        borderRadius: const BorderRadius.all(Radius.circular((30))),
-      ),
-      child: Column(
-        children: <Widget>[
+        child: Column(children: <Widget>[
           space10,
           signInUpButtonRow,
           const SizedBox(height: 50),
@@ -163,12 +161,18 @@ class _LoginScreenState extends State<LoginScreen> {
           const SizedBox(height: 15),
           passwordRow,
           const SizedBox(height: 40),
-          signInButton,
+          signUpButtonSelected
+            ? SignUpButton(
+              email: emailController.text,
+              password: passwordController.text,
+            )
+            : SignInButton(
+              email: emailController.text,
+              password: passwordController.text,
+            ),
           const SizedBox(height: 30),
           forgetPasswordButton,
-        ]
-      )
-    );
+        ]));
 
     return Scaffold(
       backgroundColor: eggShell,
@@ -185,4 +189,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

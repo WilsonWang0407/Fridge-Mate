@@ -18,35 +18,38 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    fridgeButtonList = [fridgeList()];
+    fridgeButtonList = [
+      fridgeList(),
+      addNewFridge(),
+    ];
     super.initState();
   }
 
   Widget addNewFridge() {
     return SizedBox(
-      width: 300,
-      height: 60,
+      height: 35,
       child: OutlinedButton(
         onPressed: () {
           setState(() {
-            fridgeButtonList.add(FridgeButton(fridgeNum: fridgeNumCounter));
-            fridgeButtonList.add(space10);
+            fridgeButtonList.insert(fridgeButtonList.length - 2, FridgeButton(fridgeNum: fridgeNumCounter));
+            fridgeButtonList.insert(fridgeButtonList.length - 2, space10);
             fridgeNumCounter++;
           });
         },
         style: OutlinedButton.styleFrom(
-          backgroundColor: cambridgeBlue,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(32)),
-          ),
+            backgroundColor: cambridgeBlue,
+          shape: CircleBorder(),
           side: BorderSide(
             width: 2.5,
             color: Colors.black,
           ),
         ),
-        child: Text(
-          '+  Add New Fridge',
-          style: bigButtonTextStyle,
+        child:Align(
+          alignment: Alignment.center,
+          child: Text(
+            '+',
+            style: listTitleTextStyle,
+          ),
         ),
       ),
     );
@@ -55,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget fridgeList() {
     return ListView(
       shrinkWrap: true,
-      padding: const EdgeInsets.only(left:40, right: 40),
+      padding: const EdgeInsets.only(left:20, right: 20),
       children: <Widget>[
         ...fridgeButtonList,
       ],
@@ -115,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     final listTitle = Padding(
-      padding: const EdgeInsets.only(right: 150),
+      padding: const EdgeInsets.only(right: 200),
       child: Text(
         'List of Fridges',
         style: listTitleTextStyle,
@@ -129,9 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
           space80,
           topBar,
           underline,
-          space80,
-          addNewFridge(),
-          space80,
+          space30,
           listTitle,
           space10,
           Expanded(

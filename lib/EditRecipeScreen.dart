@@ -1,5 +1,3 @@
-import 'package:flutter/widgets.dart';
-
 import 'helpers/IngredientBar.dart';
 import 'helpers/Constants.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +19,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   void initState() {
     ingredientBarList = [
       ingredientList(),
-      addNewIngredient(), 
+      addNewIngredient(),
     ];
     super.initState();
   }
@@ -32,7 +30,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
       child: OutlinedButton(
         onPressed: () {
           setState(() {
-             ingredientBarList.insert(ingredientBarList.length - 2, IngredientBar(ingredientNum: ingredientNumCounter));
+            ingredientBarList.insert(ingredientBarList.length - 2, IngredientBar(ingredientNum: ingredientNumCounter));
             ingredientBarList.insert(ingredientBarList.length - 2, space10);
             ingredientNumCounter++;
           });
@@ -48,9 +46,9 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
         child:Align(
           alignment: Alignment.center,
           child: Text(
-          '+',
-          style: listTitleTextStyle,
-        ),
+            '+',
+            style: listTitleTextStyle,
+          ),
         ),
       ),
     );
