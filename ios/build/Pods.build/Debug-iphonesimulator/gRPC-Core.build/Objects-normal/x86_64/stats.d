@@ -1,0 +1,42 @@
+dependencies: \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/gRPC-Core/src/core/lib/debug/stats.cc \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/Target\ Support\ Files/gRPC-Core/gRPC-Core-prefix.pch \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/gRPC-Core/include/grpc/support/port_platform.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/gRPC-Core/src/core/lib/debug/stats.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/strings/string_view.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/attributes.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/config.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/options.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/policy_checks.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/nullability.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/internal/nullability_impl.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/meta/type_traits.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/internal/throw_delegate.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/macros.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/optimization.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/port.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/types/span.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/types/internal/span.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/algorithm/algorithm.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/gRPC-Core/src/core/lib/debug/histogram_view.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/gRPC-Core/src/core/lib/debug/stats_data.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/gRPC-Core/src/core/lib/gprpp/per_cpu.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/gRPC-Core/include/grpc/support/cpu.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/gRPC-Core/src/core/lib/gprpp/no_destruct.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/gRPC-Core/src/core/lib/gprpp/construct_destruct.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/strings/str_cat.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/strings/has_absl_stringify.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/strings/internal/resize_uninitialized.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/strings/internal/stringify_sink.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/strings/numbers.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/internal/endian.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/casts.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/internal/identity.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/base/internal/unaligned_access.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/numeric/bits.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/numeric/internal/bits.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/numeric/int128.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/numeric/int128_have_intrinsic.inc \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/strings/str_join.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/strings/internal/str_join_internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/abseil/absl.framework/Headers/strings/internal/ostringstream.h

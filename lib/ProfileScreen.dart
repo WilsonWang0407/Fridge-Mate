@@ -1,12 +1,94 @@
+import 'dart:io';
 import 'helpers/Constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  File? _imageFile;
+  String? _imageUrl;
+  final _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfilePicture();
+  }
+
+   Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if(pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+      await _uploadImage();
+    }
+  }
+
+  Future<void> _uploadImage() async {
+    if(_imageFile == null) return;
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if(user == null) return;
+
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('profile_pictures')
+          .child('${user.uid}.jpg');
+
+      await storageRef.putFile(_imageFile!);
+
+      final downloadUrl = await storageRef.getDownloadURL();
+
+      setState(() {
+        _imageUrl = downloadUrl;
+      });
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set({'profilePictureUrl': downloadUrl}, SetOptions(merge: true));
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
+  }
+
+  Future<void> _loadProfilePicture() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if(user == null) return;
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if(userDoc.exists) {
+        setState(() {
+          _imageUrl = userDoc.data()?['profilePictureUrl'] as String?;
+        });
+      }
+    } catch (e) {
+      print('Error loading profile picture: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String userEmail = user?.email ?? 'Email not available';
 
     final topBar = Stack(
       children: <Widget>[
@@ -43,10 +125,32 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
 
-    final profilePicture = CircleAvatar(
-      backgroundColor: Colors.transparent,
-      radius: 60,
-      child: appLogo,
+    final profilePicture = GestureDetector(
+      onTap: _pickImage,
+      child: Container(
+        width: 130,
+        height: 130,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: Colors.black,
+            width: 3,
+          ),
+        ),
+        child: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          radius: 60,
+          backgroundImage:
+              _imageUrl != null ? NetworkImage(_imageUrl!) : null,
+          child: _imageUrl == null
+              ? Icon(
+                  Icons.person,
+                  size: 60,
+                  color: Colors.grey[400],
+                )
+              : null,
+        ),
+      ),
     );
 
     final userName = SizedBox(
@@ -74,7 +178,7 @@ class ProfileScreen extends StatelessWidget {
 
     final email = Center(
       child: Text(
-        'Email: user@example.com',
+        'Email: $userEmail',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w400,
@@ -153,8 +257,9 @@ class ProfileScreen extends StatelessWidget {
       width: 150,
       height: 50,
       child:OutlinedButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(loginScreenTag);
+        onPressed: () async {
+          await FirebaseAuth.instance.signOut();
+          Navigator.of(context).pushReplacementNamed(loginScreenTag);
         },
         style: OutlinedButton.styleFrom(
           backgroundColor: burstSienna,

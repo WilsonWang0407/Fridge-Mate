@@ -1,0 +1,46 @@
+dependencies: \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Modules/module.modulemap \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/self_check.c \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/Target\ Support\ Files/BoringSSL-GRPC/BoringSSL-GRPC-prefix.pch \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/crypto.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/base.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/is_boringssl.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/opensslconf.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/target.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/boringssl_prefix_symbols.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/sha.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/mem.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/thread.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/aead.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/aes.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/bn.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/ctrdrbg.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/dh.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/digest.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/ec.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/ec_key.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/engine.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/ex_data.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/stack.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/ecdsa.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/hkdf.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/hmac.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/nid.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/rsa.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../../internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/arm_arch.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../dh/internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../dh/../../internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../ec/internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../ec/../bn/internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../ec/../bn/../../internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../ecdsa/internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../rand/internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../rand/../../internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../rand/../modes/internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../rand/../modes/../../internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../rsa/internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../rsa/../../internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../service_indicator/internal.h \
+  /Users/wilson/Desktop/fridge_mate/ios/build/Debug-iphonesimulator/BoringSSL-GRPC/openssl_grpc.framework/Headers/service_indicator.h \
+  /Users/wilson/Desktop/fridge_mate/ios/Pods/BoringSSL-GRPC/src/crypto/fipsmodule/self_check/../tls/internal.h

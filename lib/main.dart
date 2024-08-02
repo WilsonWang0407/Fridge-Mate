@@ -16,13 +16,13 @@ import 'package:flutter/material.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(FridgeMate());
 }
 
 class FridgeMate extends StatelessWidget {
-
   final routes = <String, WidgetBuilder> {
     editFoodScreenTag: (context) => const EditFoodScreen(),
     editRecipeScreenTag: (context) => const EditRecipeScreen(),
@@ -40,8 +40,28 @@ class FridgeMate extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: AuthenticationWrapper(),
       routes: routes,
+    );
+  }
+}
+
+class AuthenticationWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        else if(snapshot.hasData) {
+          return const HomeScreen();
+        }
+        else {
+          return const LoginScreen();
+        }
+      },
     );
   }
 }
