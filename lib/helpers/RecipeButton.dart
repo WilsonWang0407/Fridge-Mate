@@ -1,5 +1,3 @@
-import 'package:fridge_mate/helpers/IngredientBar.dart';
-
 import 'Constants.dart';
 import 'package:flutter/material.dart';
 
