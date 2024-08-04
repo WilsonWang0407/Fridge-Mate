@@ -21,9 +21,6 @@ class SignInButton extends StatelessWidget {
         password: passwordProvider(),
       );
       Navigator.of(context).pushNamed(homeScreenTag);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Sign in successful! Welcome back, ${userCredential.user?.email}')),
-      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to sign in: $e')),

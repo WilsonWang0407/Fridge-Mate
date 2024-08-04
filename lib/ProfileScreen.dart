@@ -20,6 +20,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _userName = '';
   final _picker = ImagePicker();
   final _nameController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  String _passwordError = '';
 
   @override
   void initState() {
@@ -103,6 +106,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     } catch (e) {
       print('Error saving profile: $e');
+    }
+  }
+
+  Future<void> _updatePassword() async {
+    final newPassword = _newPasswordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    if(newPassword == confirmPassword) {
+      try {
+        final user = FirebaseAuth.instance.currentUser;
+        if(user == null) return;
+
+        await user.updatePassword(newPassword);
+
+        setState(() {
+          _passwordError = 'Password updated successfully';
+          _newPasswordController.clear();
+          _confirmPasswordController.clear();
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Password updated successfully')),
+        );
+      } catch (e) {
+        print('Error updating password: $e');
+        setState(() {
+          _passwordError = 'Error updating password';
+        });
+
+         ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error updating password: $e')),
+        );
+      }
+    } else {
+      setState(() {
+        _passwordError = 'Passwords do not match';
+      });
+
+       ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Passwords do not match')),
+      );
     }
   }
 
@@ -224,6 +268,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       width: 310,
       height: 40,
       child: TextField(
+        controller: _newPasswordController,
         keyboardType: TextInputType.text,
         style: centerBarInputTextStyle,
         maxLines: 1,
@@ -242,6 +287,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       width: 310,
       height: 40,
       child: TextField(
+        controller: _confirmPasswordController,
         keyboardType: TextInputType.text,
         style: centerBarInputTextStyle,
         maxLines: 1,
@@ -256,11 +302,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
 
+    final passwordErrorText = _passwordError.isNotEmpty
+        ? Text(
+            _passwordError,
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 14,
+            ),
+          )
+        : SizedBox.shrink();
+
     final saveButton = SizedBox(
       width: 90,
       height: 30,
       child: OutlinedButton(
-        onPressed: null,
+        onPressed: _updatePassword,
         style: OutlinedButton.styleFrom(
           backgroundColor: delftBlue,
           shape: const RoundedRectangleBorder(
