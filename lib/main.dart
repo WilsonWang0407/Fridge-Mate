@@ -23,17 +23,6 @@ Future<void> main() async {
 }
 
 class FridgeMate extends StatelessWidget {
-  final routes = <String, WidgetBuilder> {
-    editFoodScreenTag: (context) => const EditFoodScreen(),
-    editRecipeScreenTag: (context) => const EditRecipeScreen(),
-    fridgeDetailScreenTag: (context) => const FridgeDetailScreen(),
-    homeScreenTag: (context) => const HomeScreen(),
-    loginScreenTag: (context) => const LoginScreen(),
-    myRecipesScreenTag: (context) => const MyRecipesScreen(),
-    profileScreenTag: (context) => const ProfileScreen(),
-    recipesScreenTag: (context) => const RecipesScreen(),
-  };
-
   FridgeMate({super.key});
 
   @override
@@ -41,7 +30,35 @@ class FridgeMate extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AuthenticationWrapper(),
-      routes: routes,
+      routes: {
+        editFoodScreenTag: (context) => const EditFoodScreen(),
+        editRecipeScreenTag: (context) => const EditRecipeScreen(),
+        homeScreenTag: (context) => const HomeScreen(),
+        loginScreenTag: (context) => const LoginScreen(),
+        myRecipesScreenTag: (context) => const MyRecipesScreen(),
+        profileScreenTag: (context) => const ProfileScreen(),
+        recipesScreenTag: (context) => const RecipesScreen(),
+      },
+       onGenerateRoute: (settings) {
+    if (settings.name == fridgeDetailScreenTag) {
+      final args = settings.arguments as Map<String, dynamic>;
+
+      final fridgeName = args['fridgeName'] as String?;
+      final fridgeId = args['fridgeId'] as String?;
+
+      if (fridgeName == null || fridgeId == null) {
+        throw Exception("fridgeName or fridgeId not provided!");
+      }
+
+      return MaterialPageRoute(
+        builder: (context) => FridgeDetailScreen(
+          fridgeName: fridgeName,
+          fridgeId: fridgeId,
+        ),
+      );
+    }
+    return null;
+  },
     );
   }
 }
@@ -52,13 +69,11 @@ class AuthenticationWrapper extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        if(snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
-        }
-        else if(snapshot.hasData) {
+        } else if (snapshot.hasData) {
           return const HomeScreen();
-        }
-        else {
+        } else {
           return const LoginScreen();
         }
       },

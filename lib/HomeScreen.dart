@@ -1,5 +1,7 @@
 import 'helpers/Constants.dart';
 import 'helpers/FridgeButton.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,29 +14,104 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   List<Widget> fridgeButtonList = [];
   int fridgeNumCounter = 1;
+  String userName = '';
+  bool isLoading = true;
 
   @override
   void initState() {
-    fridgeButtonList = [
-      fridgeList(),
-      addNewFridge(),
-    ];
     super.initState();
+    _initializeUserData();
+  }
+
+   Future<void> _initializeUserData() async {
+    await _fetchUserName();
+    await _loadFridgeButtons();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future<void> _fetchUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      if (userDoc.exists) {
+        setState(() {
+          userName = userDoc.data()?['userName'] ?? '';
+        });
+      }
+    }
+  }
+
+  Future<void> _loadFridgeButtons() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if(user == null) return;
+
+    final fridgeCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('fridges');
+
+    final fridgeDocs = await fridgeCollection.get();
+
+    setState(() {
+      fridgeButtonList = [
+        for(var doc in fridgeDocs.docs)
+          ...[
+            FridgeButton(
+              fridgeNum: doc.data()['fridgeNum'],
+              userName: userName,
+              fridgeId: doc.id,
+            ),
+            space10,
+          ],
+        addNewFridge(),
+      ];
+      fridgeNumCounter = fridgeDocs.size + 1;
+    });
+  }
+
+  Future<void> _addFridgeToFirestore(int fridgeNum) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if(user == null) return;
+
+    final fridgeCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('fridges');
+
+    final newDocRef = fridgeCollection.doc();
+
+    await newDocRef.set({
+      'fridgeNum': fridgeNum,
+      'fridgeName': 'Fridge $fridgeNum',
+    });
+
+    setState(() {
+      fridgeButtonList.insert(
+        fridgeButtonList.length - 1,
+        FridgeButton(
+          fridgeNum: fridgeNum,
+          userName: userName,
+          fridgeId: newDocRef.id,
+        ),
+      );
+      fridgeButtonList.insert(fridgeButtonList.length - 1, space10);
+      fridgeNumCounter++;
+    });
   }
 
   Widget addNewFridge() {
     return SizedBox(
       height: 35,
       child: OutlinedButton(
-        onPressed: () {
-          setState(() {
-            fridgeButtonList.insert(fridgeButtonList.length - 2, FridgeButton(fridgeNum: fridgeNumCounter));
-            fridgeButtonList.insert(fridgeButtonList.length - 2, space10);
-            fridgeNumCounter++;
-          });
+        onPressed: () async {
+          await _addFridgeToFirestore(fridgeNumCounter);
         },
         style: OutlinedButton.styleFrom(
             backgroundColor: cambridgeBlue,

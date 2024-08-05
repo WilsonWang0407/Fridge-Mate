@@ -2,9 +2,15 @@ import 'Constants.dart';
 import 'package:flutter/material.dart';
 
 class FridgeButton extends StatelessWidget {
+  final int fridgeNum;
+  final String userName;
+  final String fridgeId;
 
-  int fridgeNum;
-  FridgeButton({required this.fridgeNum});
+  FridgeButton({
+    required this.fridgeNum,
+    required this.userName,
+    required this.fridgeId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +26,7 @@ class FridgeButton extends StatelessWidget {
     );
 
     final usersRow = Text(
-      'Users: ',
+      'Users: $userName',
       maxLines: 1,
       style: TextStyle(
         fontSize: 20,
@@ -42,7 +48,16 @@ class FridgeButton extends StatelessWidget {
       width: 300,
       height: 500,
       child: OutlinedButton(
-        onPressed: null,
+       onPressed: () {
+          Navigator.pushNamed(
+            context,
+            fridgeDetailScreenTag,
+            arguments: {
+              'fridgeName': 'Fridge $fridgeNum',
+              'fridgeId': fridgeId,
+              },
+          );
+        },
         style: OutlinedButton.styleFrom(
           backgroundColor: burstSienna,
           shape: const RoundedRectangleBorder(
