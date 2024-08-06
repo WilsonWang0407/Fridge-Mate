@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class IngredientBar extends StatelessWidget {
-
   int ingredientNum;
   IngredientBar({required this.ingredientNum});
 

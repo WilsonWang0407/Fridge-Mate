@@ -1,12 +1,20 @@
 import 'dart:io';
 import 'helpers/Constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditFoodScreen extends StatefulWidget {
-  const EditFoodScreen({super.key});
+  final String fridgeId;
+
+  const EditFoodScreen({
+    Key? key,
+    required this.fridgeId,
+  }) : super(key: key);
 
   @override
   _EditFoodScreenState createState() {
@@ -18,7 +26,10 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
   bool? isChecked = false;
   DateTime selectedDate = DateTime.now();
   File? _image;
+  String? _foodPictureUrl;
   final ImagePicker _picker = ImagePicker();
+  final TextEditingController _foodNameController = TextEditingController();
+  final TextEditingController _quantityController = TextEditingController();
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -26,7 +37,19 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
       setState(() {
         _image = File(pickedFile.path);
       });
+      await _uploadImage();
     }
+  }
+
+  Future<void> _uploadImage() async {
+    if (_image == null) return;
+    final storageRef = FirebaseStorage.instance.ref().child('food_images/${DateTime.now().toIso8601String()}_${_image!.path.split('/').last}');
+    final uploadTask = storageRef.putFile(_image!);
+    final snapshot = await uploadTask.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    setState(() {
+      _foodPictureUrl = urlDownload;
+    });
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -65,6 +88,29 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
       ),
     );
   }
+
+  Future<void> _saveFoodDetails() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if(user == null) return;
+
+    final foodCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('fridges')
+        .doc(widget.fridgeId)
+        .collection('food');
+
+    await foodCollection.add({
+      'foodPictureUrl': _foodPictureUrl,
+      'foodName': _foodNameController.text,
+      'quantity': _quantityController.text,
+      'expirationDate': formatDate(selectedDate.toLocal(), [dd, '-', mm, '-', yyyy]),
+      'isOpened': isChecked ?? false,
+    });
+
+    Navigator.of(context).pop();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -136,6 +182,7 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
           width: 180,
           height: 30,
           child: TextField(
+            controller: _foodNameController,
             keyboardType: TextInputType.text,
             style: centerBarInputTextStyle,
             maxLines: 1,
@@ -157,6 +204,7 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
           width: 210,
           height: 30,
           child: TextField(
+            controller: _quantityController,
             keyboardType: TextInputType.text,
             style: centerBarInputTextStyle,
             maxLines: 1,
@@ -228,7 +276,7 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
       width: 100,
       height: 40,
       child: OutlinedButton(
-        onPressed: null,
+        onPressed: _saveFoodDetails,
         style: OutlinedButton.styleFrom(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(1)),

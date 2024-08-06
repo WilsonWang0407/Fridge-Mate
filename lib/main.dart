@@ -12,7 +12,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -31,7 +30,6 @@ class FridgeMate extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: AuthenticationWrapper(),
       routes: {
-        editFoodScreenTag: (context) => const EditFoodScreen(),
         editRecipeScreenTag: (context) => const EditRecipeScreen(),
         homeScreenTag: (context) => const HomeScreen(),
         loginScreenTag: (context) => const LoginScreen(),
@@ -39,26 +37,42 @@ class FridgeMate extends StatelessWidget {
         profileScreenTag: (context) => const ProfileScreen(),
         recipesScreenTag: (context) => const RecipesScreen(),
       },
-       onGenerateRoute: (settings) {
-    if (settings.name == fridgeDetailScreenTag) {
-      final args = settings.arguments as Map<String, dynamic>;
+      onGenerateRoute: (settings) {
+        if (settings.name == fridgeDetailScreenTag) {
+          final args = settings.arguments as Map<String, dynamic>;
 
-      final fridgeName = args['fridgeName'] as String?;
-      final fridgeId = args['fridgeId'] as String?;
+          final fridgeName = args['fridgeName'] as String?;
+          final fridgeId = args['fridgeId'] as String?;
 
-      if (fridgeName == null || fridgeId == null) {
-        throw Exception("fridgeName or fridgeId not provided!");
-      }
+          if (fridgeName == null || fridgeId == null) {
+            throw Exception("fridgeName or fridgeId not provided!");
+          }
 
-      return MaterialPageRoute(
-        builder: (context) => FridgeDetailScreen(
-          fridgeName: fridgeName,
-          fridgeId: fridgeId,
-        ),
-      );
-    }
-    return null;
-  },
+          return MaterialPageRoute(
+            builder: (context) => FridgeDetailScreen(
+              fridgeName: fridgeName,
+              fridgeId: fridgeId,
+            ),
+          );
+        }
+
+        if (settings.name == editFoodScreenTag) {
+          final args = settings.arguments as Map<String, dynamic>;
+          final fridgeId = args['fridgeId'] as String?;
+
+          if (fridgeId == null) {
+            throw Exception("fridgeId not provided!");
+          }
+
+          return MaterialPageRoute(
+            builder: (context) => EditFoodScreen(
+              fridgeId: fridgeId,
+            ),
+          );
+        }
+
+        return null;
+      },
     );
   }
 }

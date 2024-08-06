@@ -180,7 +180,13 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
       height: 60,
       child: OutlinedButton(
         onPressed:() {
-          Navigator.of(context).pushNamed(editFoodScreenTag);
+          Navigator.pushNamed(
+            context,
+            editFoodScreenTag,
+            arguments: {
+              'fridgeId': widget.fridgeId
+            },
+          );
         },
         style: OutlinedButton.styleFrom(
           backgroundColor: cambridgeBlue,
