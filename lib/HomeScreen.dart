@@ -65,8 +65,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ...[
             FridgeButton(
               fridgeNum: doc.data()['fridgeNum'],
+              fridgeName: doc.data()['fridgeName'],
               userName: userName,
               fridgeId: doc.id,
+              onPressed: () {
+                navigateToFridgeDetail(doc.id, doc.data()['fridgeName']);
+              }
             ),
             space10,
           ],
@@ -92,18 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'fridgeName': 'Fridge $fridgeNum',
     });
 
-    setState(() {
-      fridgeButtonList.insert(
-        fridgeButtonList.length - 1,
-        FridgeButton(
-          fridgeNum: fridgeNum,
-          userName: userName,
-          fridgeId: newDocRef.id,
-        ),
-      );
-      fridgeButtonList.insert(fridgeButtonList.length - 1, space10);
-      fridgeNumCounter++;
-    });
+    await _loadFridgeButtons();
   }
 
   Widget addNewFridge() {
@@ -218,5 +211,20 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  void navigateToFridgeDetail(String fridgeId, String fridgeName) async {
+    final result = await Navigator.pushNamed(
+      context,
+      fridgeDetailScreenTag,
+      arguments: {
+        'fridgeName': fridgeName,
+        'fridgeId': fridgeId,
+      },
+    );
+
+    if (result == true) {
+      await _loadFridgeButtons();
+    }
   }
 }

@@ -26,6 +26,7 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
   bool _isLoading = true;
   final FocusNode _focusNode = FocusNode();
   bool _isEditing = false;
+  bool _hasChanges = false;
 
   void initState() {
     super.initState();
@@ -65,7 +66,7 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
   Future<void> _saveFridgeName() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
+      if(user == null) return;
 
       await FirebaseFirestore.instance
           .collection('users')
@@ -79,7 +80,7 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
         SetOptions(merge: true),
       );
 
-      await _fetchFridgeName();
+      _hasChanges = true;
     } catch (e) {
       print('Error saving fridge name: $e');
     }
@@ -104,7 +105,7 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
           top: 5,
           child: TextButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(homeScreenTag);
+              Navigator.of(context).pop(_hasChanges);
             },
             child: Text(
               '<Back',
@@ -131,7 +132,6 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
                     style: bigButtonTextStyle,
                     textAlign: TextAlign.start,
                     onChanged: (text) {
-                      setState(() {});
                     },
                     onSubmitted: (text) async {
                       await _saveFridgeName();
@@ -179,7 +179,9 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
       width: 300,
       height: 60,
       child: OutlinedButton(
-        onPressed: null,
+        onPressed:() {
+          Navigator.of(context).pushNamed(editFoodScreenTag);
+        },
         style: OutlinedButton.styleFrom(
           backgroundColor: cambridgeBlue,
           shape: const RoundedRectangleBorder(

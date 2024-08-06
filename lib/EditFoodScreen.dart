@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'helpers/Constants.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditFoodScreen extends StatefulWidget {
   const EditFoodScreen({super.key});
@@ -13,10 +15,19 @@ class EditFoodScreen extends StatefulWidget {
 }
 
 class _EditFoodScreenState extends State<EditFoodScreen> {
-
   bool? isChecked = false;
-
   DateTime selectedDate = DateTime.now();
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -31,6 +42,30 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
     }
   }
 
+  Widget _buildTakePictureButton() {
+    return SizedBox(
+      width: 250,
+      height: 60,
+      child: OutlinedButton(
+        onPressed: _pickImage,
+        style: OutlinedButton.styleFrom(
+          backgroundColor: delftBlue,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
+        ),
+        child: const Text(
+          'Take Picture',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -40,7 +75,9 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
           left: 0,
           top: 5,
           child: TextButton(
-            onPressed: null,
+            onPressed:() {
+              Navigator.of(context).pop();
+            },
             child: Text(
               '<Back',
               style: backButtonTextStyle,
@@ -67,27 +104,26 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
       ),
     );
 
-    final takePictureButton = SizedBox(
-      width: 250,
-      height: 60,
-      child: OutlinedButton(
-        onPressed: null,
-        style: OutlinedButton.styleFrom(
-          backgroundColor: delftBlue,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+    final foodImage = _image != null
+      ? Container(
+          width: 200,
+          height: 200,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(8),
           ),
-        ),
-        child: Text(
-          'Take Picture',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Image.file(_image!, width: 200, height: 200, fit: BoxFit.cover),
+              IconButton(
+                icon: Icon(Icons.edit, color: Colors.white),
+                onPressed: _pickImage,
+              ),
+            ],
           ),
-        ),
-      ),
-    );
+        )
+      : _buildTakePictureButton();
 
     final foodNameRow = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -246,9 +282,9 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
           space80,
           topBar,
           underline,
-          space80,
-          takePictureButton,
-          space80,
+          space50,
+          foodImage,
+          space50,
           centerBar,
         ]
       )
