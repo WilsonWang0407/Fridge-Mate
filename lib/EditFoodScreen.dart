@@ -31,19 +31,32 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
   final TextEditingController _foodNameController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
 
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-      await _uploadImage();
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final pickedFile = await _picker.pickImage(
+        source: source,
+        maxWidth: 1800,
+        maxHeight: 1800,
+      );
+
+      if (pickedFile != null) {
+        setState(() {
+          _image = File(pickedFile.path);
+        });
+        await _uploadImage();
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to pick image: $e')),
+      );
     }
   }
 
   Future<void> _uploadImage() async {
     if (_image == null) return;
-    final storageRef = FirebaseStorage.instance.ref().child('food_images/${DateTime.now().toIso8601String()}_${_image!.path.split('/').last}');
+    final storageRef = FirebaseStorage.instance.ref().child(
+        'food_images/${DateTime.now().toIso8601String()}_${_image!.path.split('/').last}');
     final uploadTask = storageRef.putFile(_image!);
     final snapshot = await uploadTask.whenComplete(() {});
     final urlDownload = await snapshot.ref.getDownloadURL();
@@ -56,7 +69,7 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime(2024, 1),
+        firstDate: DateTime.now(),
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -70,7 +83,9 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
       width: 250,
       height: 60,
       child: OutlinedButton(
-        onPressed: _pickImage,
+        onPressed: () {
+          _pickImage(ImageSource.camera);
+        },
         style: OutlinedButton.styleFrom(
           backgroundColor: delftBlue,
           shape: const RoundedRectangleBorder(
@@ -91,7 +106,21 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
 
   Future<void> _saveFoodDetails() async {
     final user = FirebaseAuth.instance.currentUser;
-    if(user == null) return;
+    if (user == null) return;
+
+    if (_foodNameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Food name cannot be empty.')),
+      );
+      return;
+    }
+
+    if (_quantityController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Quantity cannot be empty.')),
+      );
+      return;
+    }
 
     final foodCollection = FirebaseFirestore.instance
         .collection('users')
@@ -100,28 +129,33 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
         .doc(widget.fridgeId)
         .collection('food');
 
+  try {
     await foodCollection.add({
       'foodPictureUrl': _foodPictureUrl,
       'foodName': _foodNameController.text,
       'quantity': _quantityController.text,
-      'expirationDate': formatDate(selectedDate.toLocal(), [dd, '-', mm, '-', yyyy]),
+      'expirationDate':selectedDate.toIso8601String(),
       'isOpened': isChecked ?? false,
     });
 
     Navigator.of(context).pop();
+  } catch (e) {
+      print('Error saving food details: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to save food details: $e')),
+      );
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     final topBar = Stack(
       children: <Widget>[
         Positioned(
           left: 0,
           top: 5,
           child: TextButton(
-            onPressed:() {
+            onPressed: () {
               Navigator.of(context).pop();
             },
             child: Text(
@@ -151,33 +185,37 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
     );
 
     final foodImage = _image != null
-      ? Container(
-          width: 200,
-          height: 200,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              Image.file(_image!, width: 200, height: 200, fit: BoxFit.cover),
-              IconButton(
-                icon: Icon(Icons.edit, color: Colors.white),
-                onPressed: _pickImage,
-              ),
-            ],
-          ),
-        )
-      : _buildTakePictureButton();
+        ? Container(
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(0),
+            ),
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                Image.file(_image!, width: 200, height: 200, fit: BoxFit.cover),
+                IconButton(
+                  icon: Icon(Icons.edit, color: Colors.white),
+                  onPressed: () {
+                    _pickImage(ImageSource.camera);
+                  },
+                ),
+              ],
+            ),
+          )
+        : _buildTakePictureButton();
 
     final foodNameRow = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
+        SizedBox(width: 10),
         Text(
           'Food Name:',
           style: centerBarHintTextStyle,
         ),
+        SizedBox(width: 5),
         SizedBox(
           width: 180,
           height: 30,
@@ -194,12 +232,14 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
     );
 
     final quantityRow = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
+        SizedBox(width: 10),
         Text(
           'Quantity:',
           style: centerBarHintTextStyle,
         ),
+        SizedBox(width: 5),
         SizedBox(
           width: 210,
           height: 30,
@@ -216,12 +256,14 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
     );
 
     final expiratinDateRow = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
+        SizedBox(width: 10),
         Text(
           'Expiration Date:',
           style: centerBarHintTextStyle,
         ),
+        SizedBox(width: 5),
         SizedBox(
           width: 135,
           height: 30,
@@ -232,7 +274,7 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
             child: Text(
               formatDate(selectedDate.toLocal(), [dd, '-', mm, '-', yyyy]),
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
@@ -242,35 +284,34 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
       ],
     );
 
-    final isOpenedRow = Row(
-      children: <Widget>[
-        SizedBox(width: 10),
-        Text(
-          'Is Opened:',
-          style: centerBarHintTextStyle,
-        ),
-        SizedBox(width: 5),
-        Padding(
-          padding: EdgeInsets.only(top: 6),
-          child: Transform.scale(
-            scale: 1.8,
-            child:Checkbox(
-              fillColor: MaterialStateProperty.all<Color>(Colors.white),
-              checkColor: Colors.black,
-              side: BorderSide(
-                color: Colors.transparent,
-              ),
-              value: isChecked,
-              onChanged: (bool? value) {
-                setState(() {
-                  isChecked = value;
-                });
-              },
+    final isOpenedRow =
+        Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+      SizedBox(width: 10),
+      Text(
+        'Is Opened:',
+        style: centerBarHintTextStyle,
+      ),
+      SizedBox(width: 5),
+      Padding(
+        padding: EdgeInsets.only(top: 6),
+        child: Transform.scale(
+          scale: 1.8,
+          child: Checkbox(
+            fillColor: MaterialStateProperty.all<Color>(Colors.white),
+            checkColor: Colors.black,
+            side: BorderSide(
+              color: Colors.transparent,
             ),
+            value: isChecked,
+            onChanged: (bool? value) {
+              setState(() {
+                isChecked = value;
+              });
+            },
           ),
         ),
-      ]
-    );
+      ),
+    ]);
 
     final saveButton = SizedBox(
       width: 100,
@@ -297,18 +338,17 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
     );
 
     final centerBar = Container(
-      width: 340,
-      height: 360,
-      decoration: BoxDecoration(
-        color: cambridgeBlue,
-        border: Border.all(
-          width: 2.5,
-          color: Colors.black,
+        width: 340,
+        height: 360,
+        decoration: BoxDecoration(
+          color: cambridgeBlue,
+          border: Border.all(
+            width: 2.5,
+            color: Colors.black,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular((30))),
         ),
-        borderRadius: const BorderRadius.all(Radius.circular((30))),
-      ),
-      child: Column(
-        children: <Widget>[
+        child: Column(children: <Widget>[
           const SizedBox(height: 30),
           foodNameRow,
           space20,
@@ -319,14 +359,12 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
           isOpenedRow,
           SizedBox(height: 40),
           saveButton,
-        ]
-      )
-    );
+        ]));
 
     return Scaffold(
-      backgroundColor: eggShell,
-      body: Column(
-        children: <Widget>[
+        resizeToAvoidBottomInset: false,
+        backgroundColor: eggShell,
+        body: Column(children: <Widget>[
           space80,
           topBar,
           underline,
@@ -334,8 +372,6 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
           foodImage,
           space50,
           centerBar,
-        ]
-      )
-    );
+        ]));
   }
 }

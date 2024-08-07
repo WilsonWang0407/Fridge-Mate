@@ -20,8 +20,8 @@ Color sunset = const Color.fromARGB(255, 242, 204, 143);
 
 // Text Style
 TextStyle backButtonTextStyle = const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black54);
-TextStyle bigButtonTextStyle = const TextStyle(fontSize: 23.5, fontWeight: FontWeight.w600, color: Colors.black);
-TextStyle centerBarHintTextStyle = const TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: Colors.black);
+TextStyle bigButtonTextStyle = const TextStyle(fontSize: 21, fontWeight: FontWeight.w600, color: Colors.black);
+TextStyle centerBarHintTextStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.black);
 TextStyle centerBarInputTextStyle = const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black);
 TextStyle ingredientTextStyle = const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black);
 TextStyle listTitleTextStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black);

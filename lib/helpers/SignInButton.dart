@@ -31,7 +31,7 @@ class SignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 150,
+      width: 155,
       height: 50,
       child:OutlinedButton(
         onPressed: () => _signIn(context),

@@ -196,11 +196,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         width: 130,
         height: 130,
         decoration: BoxDecoration(
+          color: Colors.grey[500],
           shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.black,
-            width: 2,
-          ),
         ),
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
@@ -210,8 +207,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: _imageUrl == null
               ? Icon(
                   Icons.person,
-                  size: 60,
-                  color: Colors.grey[400],
+                  size: 100,
+                  color: Colors.grey[600],
                 )
               : null,
         ),
@@ -381,6 +378,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       backgroundColor: eggShell,
       body: Column(
         children: <Widget>[

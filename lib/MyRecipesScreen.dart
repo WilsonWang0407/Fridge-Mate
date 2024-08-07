@@ -115,9 +115,9 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
           space80,
           topBar,
           underline,
-          space80,
+          space50,
           addNewRecipe(),
-          space80,
+          space50,
           listTitle,
           space10,
           Expanded(

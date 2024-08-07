@@ -204,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
           underline,
           space30,
           listTitle,
-          space10,
+          space30,
           Expanded(
             child: fridgeList(),
           ),

@@ -21,9 +21,6 @@ class SignUpButton extends StatelessWidget {
         password: passwordProvider(),
       );
       Navigator.of(context).pushNamed(homeScreenTag);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Sign up successful! Welcome, ${userCredential.user?.email}')),
-      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to sign up: $e')),
@@ -34,7 +31,7 @@ class SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 150,
+      width: 155,
       height: 50,
       child:OutlinedButton(
         onPressed: () => _signUp(context),

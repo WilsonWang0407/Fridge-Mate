@@ -175,6 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ]));
 
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       backgroundColor: eggShell,
       body: Center(
         child: Column(

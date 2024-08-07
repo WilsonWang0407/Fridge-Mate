@@ -38,7 +38,7 @@ class RecipeButton extends StatelessWidget {
 
     return SizedBox(
       width: 300,
-      height: 85,
+      height: 95,
       child: OutlinedButton(
         onPressed: null,
         style: OutlinedButton.styleFrom(

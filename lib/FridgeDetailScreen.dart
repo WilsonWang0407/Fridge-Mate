@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'helpers/FoodButton.dart';
 import 'helpers/Constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -116,7 +117,7 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
         Align(
           alignment: Alignment.centerRight,
           child: Padding(
-            padding: EdgeInsets.only(right: 5),
+            padding: EdgeInsets.only(left: 150),
             child: SizedBox(
               width: 250,
               child: Stack(
@@ -206,7 +207,7 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
     );
 
     final listTitle = Padding(
-      padding: const EdgeInsets.only(right: 150),
+      padding: const EdgeInsets.only(right: 210),
       child: Text(
         'List of Food',
         style: listTitleTextStyle,
@@ -215,14 +216,57 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
 
     return Scaffold(
         backgroundColor: eggShell,
-        body: Column(children: <Widget>[
-          space80,
+        body: Column(
+          children: <Widget>[
+          SizedBox(height: 77),
           topBar,
           underline,
-          space80,
+          space50,
           addNewFoodButton,
-          space80,
+          space50,
           listTitle,
+          space10,
+          Expanded(
+            child: _buildFoodList(),
+          ),
         ]));
+  }
+
+Widget _buildFoodList() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection('fridges')
+          .doc(widget.fridgeId)
+          .collection('food')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData) return Text('No food data available');
+
+        return ListView.builder(
+          padding: const EdgeInsets.only(left: 23),
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (context, index) {
+            Map<String, dynamic> food = snapshot.data!.docs[index].data()! as Map<String, dynamic>;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: FoodButton(
+                imageUrl: food['foodPictureUrl']?.isNotEmpty == true
+                  ? food['foodPictureUrl']
+                  : 'https://firebasestorage.googleapis.com/v0/b/wilsons-fridge-mate.appspot.com/o/default_image.jpeg?alt=media&token=03eab702-aa2b-4fc7-a23b-d16477a1ba12',
+                foodName: food['foodName'] ?? 'No Name',
+                quantity: food['quantity'] ?? '0 units',
+                isOpened: food['isOpened'] ?? false,
+                expirationDate: food['expirationDate'] ?? 'N/A',
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }
