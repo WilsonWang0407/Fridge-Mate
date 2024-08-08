@@ -184,7 +184,7 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
         'isOpened': isChecked ?? false,
       });
 
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(true);
   } catch (e) {
       print('Error saving food details: $e');
       ScaffoldMessenger.of(context).showSnackBar(
