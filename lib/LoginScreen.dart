@@ -1,6 +1,8 @@
 import 'helpers/Constants.dart';
 import 'helpers/SignInButton.dart';
 import 'helpers/SignUpButton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -130,10 +132,10 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
     );
 
-    const forgetPasswordButton = TextButton(
-      onPressed: null,
+    final forgetPasswordButton = TextButton(
+      onPressed:() => _showForgotPasswordDialog(context),
       child: Text(
-        'Forget Password?',
+        'Forgot Password?',
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w400,
@@ -188,5 +190,65 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void _showForgotPasswordDialog(BuildContext context) {
+    final TextEditingController emailResetController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Reset Password'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text('Enter your registered email:'),
+              space10,
+              TextField(
+                controller: emailResetController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  hintText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Send'),
+              onPressed: () {
+                final email = emailResetController.text.trim();
+                if (email.isNotEmpty) {
+                  sendPasswordResetEmail(email);
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void sendPasswordResetEmail(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Password reset email sent to $email')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
   }
 }
