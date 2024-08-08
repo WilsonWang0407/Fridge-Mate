@@ -10,10 +10,12 @@ import 'package:image_picker/image_picker.dart';
 
 class EditFoodScreen extends StatefulWidget {
   final String fridgeId;
+  final String? foodId;
 
   const EditFoodScreen({
     Key? key,
     required this.fridgeId,
+    this.foodId,
   }) : super(key: key);
 
   @override
@@ -30,6 +32,43 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
   final ImagePicker _picker = ImagePicker();
   final TextEditingController _foodNameController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFoodDetails();
+  }
+
+  Future<void> _loadFoodDetails() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('fridges')
+          .doc(widget.fridgeId)
+          .collection('food')
+          .doc(widget.foodId)
+          .get();
+
+      if (snapshot.exists) {
+        final data = snapshot.data() as Map<String, dynamic>;
+        setState(() {
+          _foodNameController.text = data['foodName'] ?? '';
+          _quantityController.text = data['quantity'] ?? '';
+          isChecked = data['isOpened'] ?? false;
+          _foodPictureUrl = data['foodPictureUrl'] ?? null;
+          if (data['expirationDate'] != null) {
+            selectedDate = DateTime.parse(data['expirationDate']);
+          }
+        });
+      }
+    } catch (e) {
+      print('Error loading food details: $e');
+    }
+  }
 
   Future<void> _pickImage(ImageSource source) async {
     try {
@@ -130,13 +169,20 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
         .collection('food');
 
   try {
-    await foodCollection.add({
-      'foodPictureUrl': _foodPictureUrl,
-      'foodName': _foodNameController.text,
-      'quantity': _quantityController.text,
-      'expirationDate':selectedDate.toIso8601String(),
-      'isOpened': isChecked ?? false,
-    });
+    await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .collection('fridges')
+      .doc(widget.fridgeId)
+      .collection('food')
+      .doc(widget.foodId)
+      .set({
+        'foodPictureUrl': _foodPictureUrl,
+        'foodName': _foodNameController.text,
+        'quantity': _quantityController.text,
+        'expirationDate': selectedDate.toIso8601String(),
+        'isOpened': isChecked ?? false,
+      });
 
     Navigator.of(context).pop();
   } catch (e) {
@@ -168,7 +214,7 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
           child: TextButton(
             onPressed: null,
             child: Text(
-              'Edit Food',
+              widget.foodId == null ? 'Add New Food' : 'Edit Food',
               style: bigButtonTextStyle,
             ),
           ),
@@ -184,7 +230,7 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
       ),
     );
 
-    final foodImage = _image != null
+    final foodImage = (_foodPictureUrl != null || _image != null)
         ? Container(
             width: 200,
             height: 200,
@@ -195,7 +241,11 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
             child: Stack(
               alignment: Alignment.bottomRight,
               children: [
-                Image.file(_image!, width: 200, height: 200, fit: BoxFit.cover),
+                (_image != null)
+                  ? Image.file(_image!,
+                    width: 200, height: 200, fit: BoxFit.cover)
+                  : Image.network(_foodPictureUrl!,
+                    width: 200, height: 200, fit: BoxFit.cover),
                 IconButton(
                   icon: Icon(Icons.edit, color: Colors.white),
                   onPressed: () {

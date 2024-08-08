@@ -59,6 +59,7 @@ class FridgeMate extends StatelessWidget {
         if (settings.name == editFoodScreenTag) {
           final args = settings.arguments as Map<String, dynamic>;
           final fridgeId = args['fridgeId'] as String?;
+          final foodId = args['foodId'] as String?;
 
           if (fridgeId == null) {
             throw Exception("fridgeId not provided!");
@@ -67,6 +68,7 @@ class FridgeMate extends StatelessWidget {
           return MaterialPageRoute(
             builder: (context) => EditFoodScreen(
               fridgeId: fridgeId,
+              foodId: foodId,
             ),
           );
         }

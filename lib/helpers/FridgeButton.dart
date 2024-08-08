@@ -30,7 +30,7 @@ class FridgeButton extends StatelessWidget {
     );
 
     final usersRow = Text(
-      'Users: $userName',
+      'User: $userName',
       maxLines: 1,
       style: TextStyle(
         fontSize: 20,
