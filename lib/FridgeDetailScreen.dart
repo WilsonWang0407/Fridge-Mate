@@ -1,4 +1,3 @@
-import 'EditFoodScreen.dart';
 import 'dart:ui';
 import 'helpers/FoodButton.dart';
 import 'helpers/Constants.dart';
@@ -30,6 +29,7 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
   bool _isEditing = false;
   bool _hasChanges = false;
 
+  @override
   void initState() {
     super.initState();
     _fridgeNameController = TextEditingController();
@@ -68,7 +68,7 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
   Future<void> _saveFridgeName() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
-      if(user == null) return;
+      if (user == null) return;
 
       await FirebaseFirestore.instance
           .collection('users')
@@ -98,7 +98,7 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
     return textPainter.width;
   }
 
-Widget _buildFoodList() {
+  Widget _buildFoodList() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('users')
@@ -115,9 +115,19 @@ Widget _buildFoodList() {
 
         List<QueryDocumentSnapshot> foodDocs = snapshot.data!.docs;
         foodDocs.sort((a, b) {
-          DateTime expirationDateA = DateTime.tryParse(a['expirationDate'] ?? '') ?? DateTime.now();
-          DateTime expirationDateB = DateTime.tryParse(b['expirationDate'] ?? '') ?? DateTime.now();
-          return expirationDateA.compareTo(expirationDateB);
+          DateTime expirationDateA =
+              DateTime.tryParse(a['expirationDate'] ?? '') ?? DateTime.now();
+          DateTime expirationDateB =
+              DateTime.tryParse(b['expirationDate'] ?? '') ?? DateTime.now();
+          int expirationComparison =
+              expirationDateA.compareTo(expirationDateB);
+          if (expirationComparison != 0) {
+            return expirationComparison;
+          } else {
+            String nameA = a['foodName'] ?? '';
+            String nameB = b['foodName'] ?? '';
+            return nameA.compareTo(nameB);
+          }
         });
 
         return ListView.builder(
@@ -159,7 +169,13 @@ Widget _buildFoodList() {
                         'fridgeId': widget.fridgeId,
                         'foodId': doc.id,
                       },
-                    );
+                    ).then((value) {
+                      if (value == true) {
+                        setState(() {
+                          _hasChanges = true;
+                        });
+                      }
+                    });
                   },
                 ),
               ),
@@ -183,6 +199,7 @@ Widget _buildFoodList() {
           .collection('food')
           .doc(foodId)
           .delete();
+      _hasChanges = true;
     } catch (e) {
       print('Error deleting food item: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -215,6 +232,11 @@ Widget _buildFoodList() {
         );
       },
     );
+  }
+
+  Future<bool> _onWillPop() async {
+    Navigator.of(context).pop(_hasChanges);
+    return false;
   }
 
   @override
@@ -252,8 +274,7 @@ Widget _buildFoodList() {
                     ),
                     style: bigButtonTextStyle,
                     textAlign: TextAlign.start,
-                    onChanged: (text) {
-                    },
+                    onChanged: (text) {},
                     onSubmitted: (text) async {
                       await _saveFridgeName();
                       setState(() {
@@ -264,7 +285,7 @@ Widget _buildFoodList() {
                   if (!_isEditing)
                     Positioned(
                       left: _calculateIconPosition(
-                        _fridgeNameController.text, bigButtonTextStyle),
+                          _fridgeNameController.text, bigButtonTextStyle),
                       bottom: 1,
                       child: IconButton(
                         onPressed: () async {
@@ -300,14 +321,20 @@ Widget _buildFoodList() {
       width: 300,
       height: 60,
       child: OutlinedButton(
-        onPressed:() {
+        onPressed: () {
           Navigator.pushNamed(
             context,
             editFoodScreenTag,
             arguments: {
-              'fridgeId': widget.fridgeId
+              'fridgeId': widget.fridgeId,
             },
-          );
+          ).then((value) {
+            if (value == true) {
+              setState(() {
+                _hasChanges = true;
+              });
+            }
+          });
         },
         style: OutlinedButton.styleFrom(
           backgroundColor: cambridgeBlue,
@@ -335,20 +362,25 @@ Widget _buildFoodList() {
     );
 
     return Scaffold(
-        backgroundColor: eggShell,
-        body: Column(
+      backgroundColor: eggShell,
+      body: WillPopScope(
+        onWillPop: _onWillPop,
+        child: Column(
           children: <Widget>[
-          SizedBox(height: 77),
-          topBar,
-          underline,
-          space50,
-          addNewFoodButton,
-          space50,
-          listTitle,
-          space10,
-          Expanded(
-            child: _buildFoodList(),
-          ),
-        ]));
+            SizedBox(height: 77),
+            topBar,
+            underline,
+            space50,
+            addNewFoodButton,
+            space50,
+            listTitle,
+            space10,
+            Expanded(
+              child: _buildFoodList(),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

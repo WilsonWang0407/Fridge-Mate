@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-@override
+  @override
   _HomeScreenState createState() {
     return _HomeScreenState();
   }
@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _initializeUserData();
   }
 
-   Future<void> _initializeUserData() async {
+  Future<void> _initializeUserData() async {
     await _fetchUserName();
     await _loadFridgeButtons();
     setState(() {
@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadFridgeButtons() async {
     final user = FirebaseAuth.instance.currentUser;
-    if(user == null) return;
+    if (user == null) return;
 
     final fridgeCollection = FirebaseFirestore.instance
         .collection('users')
@@ -61,28 +61,116 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       fridgeButtonList = [
-        for(var doc in fridgeDocs.docs)
-          ...[
-            FridgeButton(
-              fridgeNum: doc.data()['fridgeNum'],
-              fridgeName: doc.data()['fridgeName'],
-              userName: userName,
-              fridgeId: doc.id,
-              onPressed: () {
-                navigateToFridgeDetail(doc.id, doc.data()['fridgeName']);
+        for (var doc in fridgeDocs.docs) ...[
+          FutureBuilder<QuerySnapshot>(
+            future: fridgeCollection.doc(doc.id).collection('food').get(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
               }
-            ),
-            space10,
-          ],
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return _buildFridgeButton(doc.id, doc.data(), []);
+              }
+              List<Map<String, String>> foodItems = snapshot.data!.docs.map((foodDoc) {
+                Map<String, dynamic> foodData = foodDoc.data() as Map<String, dynamic>;
+                return {
+                  'name': (foodData['foodName'] ?? 'Unknown').toString(),
+                  'quantity': (foodData['quantity'] ?? '0').toString(),
+                };
+              }).toList();
+
+              return _buildFridgeButton(doc.id, doc.data(), foodItems);
+            },
+          ),
+          space10,
+        ],
         addNewFridge(),
       ];
       fridgeNumCounter = fridgeDocs.size + 1;
     });
   }
 
+  Widget _buildFridgeButton(String fridgeId, Map<String, dynamic> fridgeData, List<Map<String, String>> foodItems) {
+    return Container(
+      width: double.infinity,
+      child: Dismissible(
+        key: Key(fridgeId),
+        background: Container(
+          color: Colors.red,
+          alignment: Alignment.centerRight,
+          padding: EdgeInsets.only(right: 20),
+          child: Icon(Icons.delete, color: Colors.white),
+        ),
+        direction: DismissDirection.endToStart,
+        onDismissed: (direction) async {
+          await _deleteFridge(fridgeId);
+        },
+        confirmDismiss: (direction) async {
+          return await _showDeleteConfirmationDialog(context);
+        },
+        child: FridgeButton(
+          fridgeNum: fridgeData['fridgeNum'],
+          fridgeName: fridgeData['fridgeName'],
+          userName: userName,
+          fridgeId: fridgeId,
+          foodItems: foodItems,
+          onPressed: () {
+            navigateToFridgeDetail(fridgeId, fridgeData['fridgeName']);
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> _deleteFridge(String fridgeId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('fridges')
+          .doc(fridgeId)
+          .delete();
+      await _loadFridgeButtons();
+    } catch (e) {
+      print('Error deleting fridge: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete fridge: $e')),
+      );
+    }
+  }
+
+  Future<bool?> _showDeleteConfirmationDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Confirmation'),
+          content: Text('Are you sure you want to delete this fridge?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text('Delete'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _addFridgeToFirestore(int fridgeNum) async {
     final user = FirebaseAuth.instance.currentUser;
-    if(user == null) return;
+    if (user == null) return;
 
     final fridgeCollection = FirebaseFirestore.instance
         .collection('users')
@@ -107,14 +195,14 @@ class _HomeScreenState extends State<HomeScreen> {
           await _addFridgeToFirestore(fridgeNumCounter);
         },
         style: OutlinedButton.styleFrom(
-            backgroundColor: cambridgeBlue,
+          backgroundColor: cambridgeBlue,
           shape: CircleBorder(),
           side: BorderSide(
             width: 2.5,
             color: Colors.black,
           ),
         ),
-        child:Align(
+        child: Align(
           alignment: Alignment.center,
           child: Text(
             '+',
@@ -128,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget fridgeList() {
     return ListView(
       shrinkWrap: true,
-      padding: const EdgeInsets.only(left:20, right: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20),
       children: <Widget>[
         ...fridgeButtonList,
       ],
@@ -137,13 +225,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final topBar = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         TextButton(
           onPressed: () {
-              Navigator.of(context).pushNamed(recipesScreenTag);
+            Navigator.of(context).pushNamed(recipesScreenTag);
           },
           child: Text(
             'Recipes',
@@ -188,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     final listTitle = Padding(
-      padding: const EdgeInsets.only(right: 200),
+      padding: const EdgeInsets.only(right: 180),
       child: Text(
         'List of Fridges',
         style: listTitleTextStyle,
@@ -204,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
           underline,
           space30,
           listTitle,
-          space30,
+          space20,
           Expanded(
             child: fridgeList(),
           ),
