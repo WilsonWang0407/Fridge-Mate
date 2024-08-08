@@ -2,13 +2,16 @@ import 'Constants.dart';
 import 'package:flutter/material.dart';
 
 class RecipeButton extends StatelessWidget {
+  final int recipeNum;
+  final VoidCallback onPressed;
 
-  int recipeNum;
-  RecipeButton({required this.recipeNum});
+  RecipeButton({
+    required this.recipeNum,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
-
     final recipeName = Text(
       'Recipe $recipeNum',
       style: TextStyle(
@@ -40,7 +43,7 @@ class RecipeButton extends StatelessWidget {
       width: 300,
       height: 95,
       child: OutlinedButton(
-        onPressed: null,
+        onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           backgroundColor: sunset,
           shape: const RoundedRectangleBorder(
@@ -49,7 +52,7 @@ class RecipeButton extends StatelessWidget {
           side: BorderSide(
             width: 2.5,
             color: Colors.black,
-          )
+          ),
         ),
         child: Align(
           alignment: Alignment.centerLeft,
@@ -59,7 +62,7 @@ class RecipeButton extends StatelessWidget {
               space5,
               recipeName,
               byUserNameRow,
-              ingredientsRow
+              ingredientsRow,
             ],
           ),
         ),
