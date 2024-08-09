@@ -20,7 +20,6 @@ class FridgeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final fridgeNameRow = Text(
       fridgeName,
       maxLines: 1,

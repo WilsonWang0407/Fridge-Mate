@@ -16,36 +16,83 @@ class MyRecipesScreen extends StatefulWidget {
 class _MyRecipesScreenState extends State<MyRecipesScreen> {
   List<Widget> recipeButtonList = [];
   int recipeNumCounter = 1;
+  String userName = '';
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadRecipeButtons();
+    _initializeUserData();
+  }
+
+  Future<void> _initializeUserData() async {
+    await _fetchUserName();
+    await _loadRecipeButtons();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future<void> _fetchUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      if (userDoc.exists) {
+        setState(() {
+          userName = userDoc.data()?['userName'] ?? '';
+        });
+      }
+    }
   }
 
   Future<void> _loadRecipeButtons() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
-    final recipesCollection = FirebaseFirestore.instance
+
+    final recipeCollection = FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .collection('recipes');
 
-    final recipeDocs = await recipesCollection.get();
+    final recipeDocs = await recipeCollection.get();
 
     setState(() {
-      recipeButtonList.clear();
+      recipeButtonList = [
+        for (var doc in recipeDocs.docs) ...[
+          FutureBuilder<QuerySnapshot>(
+            future: recipeCollection.doc(doc.id).collection('ingredients').get(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return _buildRecipeButton(doc.id, doc.data(), []);
+              }
+              List<String> ingredients = snapshot.data!.docs.map((ingredientDoc) {
+                Map<String, dynamic> ingredientData = ingredientDoc.data() as Map<String, dynamic>;
+                return (ingredientData['name'] ?? 'Unknown').toString();
+              }).toList();
 
-      for (var doc in recipeDocs.docs) {
-        recipeButtonList.add(_buildRecipeButton(doc.id, doc.data()));
-        recipeButtonList.add(space10);
-      }
-
+              return _buildRecipeButton(doc.id, doc.data(), ingredients);
+            },
+          ),
+          space10,
+        ],
+      ];
       recipeNumCounter = recipeDocs.size + 1;
     });
   }
 
-  Widget _buildRecipeButton(String recipeId, Map<String, dynamic> recipeData) {
+  Widget _buildRecipeButton(String recipeId, Map<String, dynamic> recipeData, List<String> ingredients) {
+    final imageUrl = recipeData['dishPictureUrl'] ??
+        'https://firebasestorage.googleapis.com/v0/b/wilsons-fridge-mate.appspot.com/o/default_image.jpeg?alt=media&token=03eab702-aa2b-4fc7-a23b-d16477a1ba12';
+
+    final recipeNum = recipeData['recipeNum'] ?? 0;
+    final recipeName = recipeData['recipeName'] ?? 'No Name';
+
     return Dismissible(
       key: Key(recipeId),
       background: Container(
@@ -55,16 +102,20 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
         child: Icon(Icons.delete, color: Colors.white),
       ),
       direction: DismissDirection.endToStart,
-      confirmDismiss: (direction) async {
-        return await _showDeleteConfirmationDialog(context);
-      },
       onDismissed: (direction) async {
         await _deleteRecipe(recipeId);
       },
+      confirmDismiss: (direction) async {
+        return await _showDeleteConfirmationDialog(context);
+      },
       child: RecipeButton(
-        recipeNum: recipeData['recipeNum'] ?? 0,
+        imageUrl: imageUrl,
+        recipeNum: recipeNum,
+        recipeName: recipeName,
+        userName: userName,
+        ingredients: ingredients.join(', '),
         onPressed: () {
-          navigateToEditRecipe(recipeId, recipeData['recipeName'] ?? 'Unnamed Recipe');
+          navigateToEditRecipe(recipeId, recipeName);
         },
       ),
     );
@@ -81,15 +132,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
           .collection('recipes')
           .doc(recipeId)
           .delete();
-
-      setState(() {
-        recipeButtonList.removeWhere((widget) {
-          if (widget is Dismissible) {
-            return widget.key == Key(recipeId);
-          }
-          return false;
-        });
-      });
+      await _loadRecipeButtons();
     } catch (e) {
       print('Error deleting recipe: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -128,12 +171,12 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final recipesCollection = FirebaseFirestore.instance
+    final recipeCollection = FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .collection('recipes');
 
-    final newDocRef = recipesCollection.doc();
+    final newDocRef = recipeCollection.doc();
 
     await newDocRef.set({
       'recipeNum': recipeNum,
@@ -172,7 +215,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
   Widget recipeList() {
     return ListView(
       shrinkWrap: true,
-      padding: const EdgeInsets.only(left: 40, right: 40),
+      padding: const EdgeInsets.only(left: 20, right: 20),
       children: <Widget>[
         ...recipeButtonList,
       ],

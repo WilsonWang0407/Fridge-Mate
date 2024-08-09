@@ -30,7 +30,6 @@ class FridgeMate extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: AuthenticationWrapper(),
       routes: {
-        editRecipeScreenTag: (context) => const EditRecipeScreen(),
         homeScreenTag: (context) => const HomeScreen(),
         loginScreenTag: (context) => const LoginScreen(),
         myRecipesScreenTag: (context) => const MyRecipesScreen(),
@@ -40,7 +39,6 @@ class FridgeMate extends StatelessWidget {
       onGenerateRoute: (settings) {
         if (settings.name == fridgeDetailScreenTag) {
           final args = settings.arguments as Map<String, dynamic>;
-
           final fridgeName = args['fridgeName'] as String?;
           final fridgeId = args['fridgeId'] as String?;
 
@@ -69,6 +67,24 @@ class FridgeMate extends StatelessWidget {
             builder: (context) => EditFoodScreen(
               fridgeId: fridgeId,
               foodId: foodId,
+            ),
+          );
+        }
+
+        if (settings.name == editRecipeScreenTag) {
+          final args = settings.arguments as Map<String, dynamic>;
+
+          final recipeName = args['recipeName'] as String?;
+          final recipeId = args['recipeId'] as String?;
+
+          if (recipeName == null || recipeId == null) {
+            throw Exception("recipeName or recipeId not provided!");
+          }
+
+          return MaterialPageRoute(
+            builder: (context) => EditRecipeScreen(
+              recipeName: recipeName,
+              recipeId: recipeId,
             ),
           );
         }

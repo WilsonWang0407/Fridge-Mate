@@ -8,7 +8,6 @@ const homeScreenTag = 'Home Screen';
 const loginScreenTag = 'Login Screen';
 const myRecipesScreenTag = 'My Recipes Screen';
 const profileScreenTag = 'Profile Screen';
-const recipeDetailScreenTag = 'Recipe Detail Screen';
 const recipesScreenTag = 'Recipes Screen';
 
 // Color

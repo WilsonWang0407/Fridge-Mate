@@ -158,7 +158,7 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
                       ? food['foodPictureUrl']
                       : 'https://firebasestorage.googleapis.com/v0/b/wilsons-fridge-mate.appspot.com/o/default_image.jpeg?alt=media&token=03eab702-aa2b-4fc7-a23b-d16477a1ba12',
                   foodName: food['foodName'] ?? 'No Name',
-                  quantity: food['quantity'] ?? '0 units',
+                  quantity: food['quantity'] ?? '0',
                   isOpened: food['isOpened'] ?? false,
                   expirationDate: food['expirationDate'] ?? 'N/A',
                   onPressed: () {

@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class IngredientBar extends StatelessWidget {
-  int ingredientNum;
-  IngredientBar({required this.ingredientNum});
+  final TextEditingController nameController;
+  final TextEditingController quantityController;
+
+  IngredientBar({
+    String initialName = '',
+    String initialQuantity = '',
+  })  : nameController = TextEditingController(text: initialName),
+        quantityController = TextEditingController(text: initialQuantity);
+
 
   @override
   Widget build(BuildContext context) {
-
     final titleRow = SizedBox(
       width: 310,
       height: 30,
@@ -19,8 +25,8 @@ class IngredientBar extends StatelessWidget {
         ),
         child: Padding(
           padding: EdgeInsets.only(top: 2),
-          child:Text(
-            '   Ingredient $ingredientNum '.substring(0, 15),
+          child: Text(
+            '   Ingredient',
             maxLines: 1,
             style: ingredientTextStyle,
           ),
@@ -32,13 +38,14 @@ class IngredientBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Text(
-          'Food Name:',
+          'Name:',
           style: ingredientTextStyle,
         ),
         SizedBox(
-          width: 145,
+          width: 195,
           height: 25,
           child: TextField(
+            controller: nameController,
             keyboardType: TextInputType.text,
             style: centerBarInputTextStyle,
             maxLines: 1,
@@ -60,6 +67,7 @@ class IngredientBar extends StatelessWidget {
           width: 170,
           height: 25,
           child: TextField(
+            controller: quantityController,
             keyboardType: TextInputType.text,
             style: centerBarInputTextStyle,
             maxLines: 1,
@@ -69,7 +77,6 @@ class IngredientBar extends StatelessWidget {
         )
       ],
     );
-
 
     return Container(
       width: 300,
@@ -85,7 +92,7 @@ class IngredientBar extends StatelessWidget {
           foodNameRow,
           SizedBox(height: 10),
           quantityRow,
-        ]
+        ],
       ),
     );
   }

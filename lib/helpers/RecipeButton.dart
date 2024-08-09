@@ -2,70 +2,94 @@ import 'Constants.dart';
 import 'package:flutter/material.dart';
 
 class RecipeButton extends StatelessWidget {
+  final String imageUrl;
   final int recipeNum;
+  final String recipeName;
+  final String userName;
+  final String ingredients;
   final VoidCallback onPressed;
 
   RecipeButton({
+    required this.imageUrl,
     required this.recipeNum,
+    required this.recipeName,
+    required this.userName,
+    required this.ingredients,
     required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    final recipeName = Text(
-      'Recipe $recipeNum',
-      style: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-        color: Colors.black,
-      ),
-    );
-
-    final byUserNameRow = Text(
-      'by User Name',
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        color: Colors.black54,
-      ),
-    );
-
-    final ingredientsRow = Text(
-      'Ingredients:',
-      style: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-        color: Colors.black,
-      ),
-    );
-
-    return SizedBox(
-      width: 300,
-      height: 95,
-      child: OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          backgroundColor: sunset,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(32)),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Row(
+        children: [
+          Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+            ),
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.fill,
+            ),
           ),
-          side: BorderSide(
-            width: 2.5,
-            color: Colors.black,
+          SizedBox(width: 5),
+          Container(
+            width: 225,
+            height: 120,
+            decoration: BoxDecoration(
+              color: sunset,
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    recipeName,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                      decoration: TextDecoration.underline,
+                      decorationThickness: 0.5,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    'by $userName',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black54,
+                    ),
+                  ),
+                  space10,
+                  Text(
+                    'Ingredients:',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    ingredients,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              space5,
-              recipeName,
-              byUserNameRow,
-              ingredientsRow,
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }

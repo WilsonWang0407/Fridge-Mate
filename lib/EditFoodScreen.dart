@@ -168,15 +168,15 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
         .doc(widget.fridgeId)
         .collection('food');
 
-  try {
-    await FirebaseFirestore.instance
-      .collection('users')
-      .doc(user.uid)
-      .collection('fridges')
-      .doc(widget.fridgeId)
-      .collection('food')
-      .doc(widget.foodId)
-      .set({
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('fridges')
+          .doc(widget.fridgeId)
+          .collection('food')
+          .doc(widget.foodId)
+          .set({
         'foodPictureUrl': _foodPictureUrl,
         'foodName': _foodNameController.text,
         'quantity': _quantityController.text,
@@ -184,8 +184,8 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
         'isOpened': isChecked ?? false,
       });
 
-    Navigator.of(context).pop(true);
-  } catch (e) {
+      Navigator.of(context).pop(true);
+    } catch (e) {
       print('Error saving food details: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to save food details: $e')),
@@ -242,10 +242,10 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
               alignment: Alignment.bottomRight,
               children: [
                 (_image != null)
-                  ? Image.file(_image!,
-                    width: 200, height: 200, fit: BoxFit.cover)
-                  : Image.network(_foodPictureUrl!,
-                    width: 200, height: 200, fit: BoxFit.cover),
+                    ? Image.file(_image!,
+                        width: 200, height: 200, fit: BoxFit.cover)
+                    : Image.network(_foodPictureUrl!,
+                        width: 200, height: 200, fit: BoxFit.cover),
                 IconButton(
                   icon: Icon(Icons.edit, color: Colors.white),
                   onPressed: () {
@@ -412,16 +412,24 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
         ]));
 
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: eggShell,
-        body: Column(children: <Widget>[
-          space80,
-          topBar,
-          underline,
-          space50,
-          foodImage,
-          space50,
-          centerBar,
-        ]));
+      resizeToAvoidBottomInset: true,
+      backgroundColor: eggShell,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: 60),
+              topBar,
+              underline,
+              space50,
+              foodImage,
+              space50,
+              centerBar,
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
