@@ -1,4 +1,4 @@
-import '../helpers/Constants.dart';
+import 'package:fridge_mate/helpers/Constants.dart';
 import 'package:flutter/material.dart';
 
 class FridgeButton extends StatelessWidget {

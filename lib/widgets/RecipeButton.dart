@@ -1,4 +1,4 @@
-import 'Constants.dart';
+import 'package:fridge_mate/helpers/Constants.dart';
 import 'package:flutter/material.dart';
 
 class RecipeButton extends StatelessWidget {

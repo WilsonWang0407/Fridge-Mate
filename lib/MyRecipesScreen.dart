@@ -1,5 +1,5 @@
 import 'helpers/Constants.dart';
-import 'helpers/RecipeButton.dart';
+import 'widgets/RecipeButton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

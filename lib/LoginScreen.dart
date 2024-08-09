@@ -1,6 +1,6 @@
 import 'helpers/Constants.dart';
-import 'helpers/SignInButton.dart';
-import 'helpers/SignUpButton.dart';
+import 'widgets/SignInButton.dart';
+import 'widgets/SignUpButton.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -1,4 +1,4 @@
-import '../helpers/Constants.dart';
+import 'package:fridge_mate/helpers/Constants.dart';
 import 'package:flutter/material.dart';
 
 class FoodButton extends StatelessWidget {
@@ -95,7 +95,7 @@ class FoodButton extends StatelessWidget {
   }
 
   String _calculateDaysUntilExpiration(DateTime expDate) {
-    int days = expDate.difference(DateTime.now()).inDays;
-    return days >= 0 ? 'Expire in $days days' : 'Expired';
+    int days = expDate.difference(DateTime.now()).inDays + 1;
+    return days >= 0 ? 'Expire in $days day(s)' : 'Expired';
   }
 }
