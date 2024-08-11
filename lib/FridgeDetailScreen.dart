@@ -258,51 +258,48 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
         ),
         Align(
           alignment: Alignment.centerRight,
-          child: Padding(
-            padding: EdgeInsets.only(left: 150),
-            child: SizedBox(
-              width: 250,
-              child: Stack(
-                children: [
-                  TextField(
-                    controller: _fridgeNameController,
-                    focusNode: _focusNode,
-                    readOnly: !_isEditing,
-                    inputFormatters: [LengthLimitingTextInputFormatter(12)],
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                    ),
-                    style: bigButtonTextStyle,
-                    textAlign: TextAlign.start,
-                    onChanged: (text) {},
-                    onSubmitted: (text) async {
-                      await _saveFridgeName();
-                      setState(() {
-                        _isEditing = false;
-                      });
-                    },
+          child: SizedBox(
+            width: 250,
+            child: Stack(
+              children: [
+                TextField(
+                  controller: _fridgeNameController,
+                  focusNode: _focusNode,
+                  readOnly: !_isEditing,
+                  inputFormatters: [LengthLimitingTextInputFormatter(12)],
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
                   ),
-                  if (!_isEditing)
-                    Positioned(
-                      left: _calculateIconPosition(
-                          _fridgeNameController.text, bigButtonTextStyle),
-                      bottom: 1,
-                      child: IconButton(
-                        onPressed: () async {
-                          setState(() {
-                            _isEditing = true;
-                          });
-                          _focusNode.requestFocus();
-                        },
-                        icon: Icon(
-                          Icons.edit,
-                          color: Colors.grey,
-                          size: 20,
-                        ),
+                  style: bigButtonTextStyle,
+                  textAlign: TextAlign.start,
+                  onChanged: (text) {},
+                  onSubmitted: (text) async {
+                    await _saveFridgeName();
+                    setState(() {
+                      _isEditing = false;
+                    });
+                  },
+                ),
+                if (!_isEditing)
+                  Positioned(
+                    left: _calculateIconPosition(
+                        _fridgeNameController.text, bigButtonTextStyle),
+                    bottom: 1,
+                    child: IconButton(
+                      onPressed: () async {
+                        setState(() {
+                          _isEditing = true;
+                        });
+                        _focusNode.requestFocus();
+                      },
+                      icon: Icon(
+                        Icons.edit,
+                        color: Colors.grey,
+                        size: 20,
                       ),
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
           ),
         ),

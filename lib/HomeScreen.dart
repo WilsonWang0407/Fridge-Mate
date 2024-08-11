@@ -1,5 +1,5 @@
 import 'helpers/Constants.dart';
-import 'helpers/FridgeButton.dart';
+import 'widgets/FridgeButton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Widget> fridgeButtonList = [];
-  int fridgeNumCounter = 1;
   String userName = '';
   bool isLoading = true;
 
@@ -86,7 +85,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
         addNewFridge(),
       ];
-      fridgeNumCounter = fridgeDocs.size + 1;
     });
   }
 
@@ -109,7 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
           return await _showDeleteConfirmationDialog(context);
         },
         child: FridgeButton(
-          fridgeNum: fridgeData['fridgeNum'],
           fridgeName: fridgeData['fridgeName'],
           userName: userName,
           fridgeId: fridgeId,
@@ -168,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> _addFridgeToFirestore(int fridgeNum) async {
+  Future<void> _addFridgeToFirestore() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
@@ -180,8 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final newDocRef = fridgeCollection.doc();
 
     await newDocRef.set({
-      'fridgeNum': fridgeNum,
-      'fridgeName': 'Fridge $fridgeNum',
+      'fridgeName': 'My Fridge',
     });
 
     await _loadFridgeButtons();
@@ -192,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
       height: 35,
       child: OutlinedButton(
         onPressed: () async {
-          await _addFridgeToFirestore(fridgeNumCounter);
+          await _addFridgeToFirestore();
         },
         style: OutlinedButton.styleFrom(
           backgroundColor: cambridgeBlue,

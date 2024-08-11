@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'helpers/IngredientBar.dart';
+import 'widgets/IngredientBar.dart';
 import 'helpers/Constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

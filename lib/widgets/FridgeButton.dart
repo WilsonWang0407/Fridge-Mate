@@ -2,7 +2,6 @@ import 'package:fridge_mate/helpers/Constants.dart';
 import 'package:flutter/material.dart';
 
 class FridgeButton extends StatelessWidget {
-  final int fridgeNum;
   final String fridgeName;
   final String userName;
   final String fridgeId;
@@ -10,7 +9,6 @@ class FridgeButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   FridgeButton({
-    required this.fridgeNum,
     required this.fridgeName,
     required this.userName,
     required this.fridgeId,
