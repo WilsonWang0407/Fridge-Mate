@@ -295,11 +295,6 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     }
   }
 
-  Future<bool> _onWillPop() async {
-    Navigator.of(context).pop(_hasChanges);
-    return false;
-  }
-
   Widget _buildTakePictureButton() {
     return SizedBox(
       width: 250,
@@ -495,7 +490,9 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
       resizeToAvoidBottomInset: true,
       backgroundColor: eggShell,
       body: WillPopScope(
-        onWillPop: _onWillPop,
+        onWillPop: () async {
+          return false;
+        },
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0),

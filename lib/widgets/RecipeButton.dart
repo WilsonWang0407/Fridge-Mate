@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 class RecipeButton extends StatelessWidget {
   final String imageUrl;
-  final int recipeNum;
   final String recipeName;
   final String userName;
   final String ingredients;
@@ -11,7 +10,6 @@ class RecipeButton extends StatelessWidget {
 
   RecipeButton({
     required this.imageUrl,
-    required this.recipeNum,
     required this.recipeName,
     required this.userName,
     required this.ingredients,

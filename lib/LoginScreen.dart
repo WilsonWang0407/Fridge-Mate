@@ -175,17 +175,22 @@ class _LoginScreenState extends State<LoginScreen> {
           forgetPasswordButton,
         ]));
 
-    return Scaffold(
-      resizeToAvoidBottomInset : false,
-      backgroundColor: eggShell,
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 90),
-            logo,
-            const SizedBox(height: 40),
-            centerBar,
-          ],
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset : false,
+        backgroundColor: eggShell,
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 90),
+              logo,
+              const SizedBox(height: 40),
+              centerBar,
+            ],
+          ),
         ),
       ),
     );

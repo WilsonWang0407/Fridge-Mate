@@ -234,11 +234,6 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
     );
   }
 
-  Future<bool> _onWillPop() async {
-    Navigator.of(context).pop(_hasChanges);
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     final topBar = Stack(
@@ -361,7 +356,9 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
     return Scaffold(
       backgroundColor: eggShell,
       body: WillPopScope(
-        onWillPop: _onWillPop,
+        onWillPop: () async {
+          return false;
+        },
         child: Column(
           children: <Widget>[
             SizedBox(height: 77),

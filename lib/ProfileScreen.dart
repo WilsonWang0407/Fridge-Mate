@@ -377,25 +377,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
 
-    return Scaffold(
-      resizeToAvoidBottomInset : false,
-      backgroundColor: eggShell,
-      body: Column(
-        children: <Widget>[
-          space80,
-          topBar,
-          underline,
-          space30,
-          profilePicture,
-          space5,
-          userName,
-          email,
-          SizedBox(height: 60),
-          resetPasswordBar,
-          space80,
-          logoutButton,
-        ]
-      )
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: eggShell,
+        body: Column(
+          children: <Widget>[
+            space80,
+            topBar,
+            underline,
+            space30,
+            profilePicture,
+            space5,
+            userName,
+            email,
+            SizedBox(height: 60),
+            resetPasswordBar,
+            space80,
+            logoutButton,
+          ],
+        ),
+      ),
     );
   }
 }

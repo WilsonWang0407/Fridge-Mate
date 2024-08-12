@@ -411,22 +411,27 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
           saveButton,
         ]));
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: eggShell,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 60),
-              topBar,
-              underline,
-              space50,
-              foodImage,
-              space50,
-              centerBar,
-            ],
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+         resizeToAvoidBottomInset: true,
+        backgroundColor: eggShell,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 60),
+                topBar,
+                underline,
+                space50,
+                foodImage,
+                space50,
+                centerBar,
+              ],
+            ),
           ),
         ),
       ),

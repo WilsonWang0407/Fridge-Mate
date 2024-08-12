@@ -1,3 +1,5 @@
+import 'package:flutter/rendering.dart';
+
 import 'helpers/Constants.dart';
 import 'widgets/FridgeButton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -224,39 +226,36 @@ class _HomeScreenState extends State<HomeScreen> {
     final topBar = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(recipesScreenTag);
-          },
-          child: Text(
-            'Recipes',
-            style: bigButtonTextStyle,
+        Padding(
+          padding: EdgeInsets.only(top: 40),
+            child: TextButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(myRecipesScreenTag);
+            },
+            child: Text(
+              'Recipes',
+              style: bigButtonTextStyle,
+            ),
           ),
         ),
-        Text(
-          '|',
-          style: bigButtonTextStyle,
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(myRecipesScreenTag);
-          },
-          child: Text(
-            'My Recipes',
-            style: bigButtonTextStyle,
+        Padding(
+          padding:EdgeInsets.only(right: 15),
+          child: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            radius: 40,
+            child: appLogo,
           ),
         ),
-        Text(
-          '|',
-          style: bigButtonTextStyle,
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(profileScreenTag);
-          },
-          child: Text(
-            'Profile',
-            style: bigButtonTextStyle,
+        Padding(
+          padding: EdgeInsets.only(top: 40),
+          child: TextButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(profileScreenTag);
+            },
+            child: Text(
+              'Profile',
+              style: bigButtonTextStyle,
+            ),
           ),
         ),
       ],
@@ -278,20 +277,25 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    return Scaffold(
-      backgroundColor: eggShell,
-      body: Column(
-        children: <Widget>[
-          space80,
-          topBar,
-          underline,
-          space30,
-          listTitle,
-          space20,
-          Expanded(
-            child: fridgeList(),
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: eggShell,
+        body: Column(
+          children: <Widget>[
+            SizedBox(height: 40),
+            topBar,
+            underline,
+            space30,
+            listTitle,
+            space20,
+            Expanded(
+              child: fridgeList(),
+            ),
+          ],
+        ),
       ),
     );
   }

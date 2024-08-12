@@ -15,7 +15,6 @@ class MyRecipesScreen extends StatefulWidget {
 
 class _MyRecipesScreenState extends State<MyRecipesScreen> {
   List<Widget> recipeButtonList = [];
-  int recipeNumCounter = 1;
   String userName = '';
   bool isLoading = true;
 
@@ -82,7 +81,6 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
           space10,
         ],
       ];
-      recipeNumCounter = recipeDocs.size + 1;
     });
   }
 
@@ -90,7 +88,6 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
     final imageUrl = recipeData['dishPictureUrl'] ??
         'https://firebasestorage.googleapis.com/v0/b/wilsons-fridge-mate.appspot.com/o/default_image.jpeg?alt=media&token=03eab702-aa2b-4fc7-a23b-d16477a1ba12';
 
-    final recipeNum = recipeData['recipeNum'] ?? 0;
     final recipeName = recipeData['recipeName'] ?? 'No Name';
 
     return Dismissible(
@@ -110,7 +107,6 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
       },
       child: RecipeButton(
         imageUrl: imageUrl,
-        recipeNum: recipeNum,
         recipeName: recipeName,
         userName: userName,
         ingredients: ingredients.join(', '),
@@ -167,7 +163,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
     );
   }
 
-  Future<void> _addRecipeToFirestore(int recipeNum) async {
+  Future<void> _addRecipeToFirestore() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
@@ -179,8 +175,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
     final newDocRef = recipeCollection.doc();
 
     await newDocRef.set({
-      'recipeNum': recipeNum,
-      'recipeName': 'Recipe $recipeNum',
+      'recipeName': 'My Recipe',
     });
 
     await _loadRecipeButtons();
@@ -192,7 +187,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
       height: 60,
       child: OutlinedButton(
         onPressed: () async {
-          await _addRecipeToFirestore(recipeNumCounter);
+          await _addRecipeToFirestore();
         },
         style: OutlinedButton.styleFrom(
           backgroundColor: burstSienna,
@@ -267,22 +262,27 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
       ),
     );
 
-    return Scaffold(
-      backgroundColor: eggShell,
-      body: Column(
-        children: <Widget>[
-          space80,
-          topBar,
-          underline,
-          space50,
-          addNewRecipe(),
-          space50,
-          listTitle,
-          space10,
-          Expanded(
-            child: recipeList(),
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: eggShell,
+        body: Column(
+          children: <Widget>[
+            space80,
+            topBar,
+            underline,
+            space50,
+            addNewRecipe(),
+            space50,
+            listTitle,
+            space10,
+            Expanded(
+              child: recipeList(),
+            ),
+          ],
+        ),
       ),
     );
   }
