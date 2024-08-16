@@ -51,5 +51,16 @@
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs access to the camera to take pictures.</string>
 
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to your location for location-based notifications.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs access to your location to send notifications even when the app is not open.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This identifier will be used to deliver personalized ads to you.</string>
 </dict>
 </plist>

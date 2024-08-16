@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'widgets/FoodButton.dart';
 import 'helpers/Constants.dart';
+import 'notification_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -98,6 +99,22 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
     return textPainter.width;
   }
 
+  Future<void> checkFoodExpiry(DateTime expirationDate, String foodName) async {
+    final DateTime now = DateTime.now();
+    final DateTime currentDate = DateTime(now.year, now.month, now.day);
+    final DateTime expirationDateAtMidnight = DateTime(expirationDate.year, expirationDate.month, expirationDate.day);
+  
+    final Duration difference = expirationDateAtMidnight.difference(currentDate);
+
+    if (difference.inDays == 7) {
+      await NotificationService().showNotification('Reminder', '$foodName will expire in a week', 'payload');
+    } else if (difference.inDays == 3) {
+      await NotificationService().showNotification('Reminder', '$foodName will expire in 3 days', 'payload');
+    } else if (difference.inDays == 0) {
+      await NotificationService().showNotification('Reminder', '$foodName will expire today', 'payload');
+    }
+  }
+
   Widget _buildFoodList() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
@@ -129,6 +146,12 @@ class _FridgeDetailScreenState extends State<FridgeDetailScreen> {
             return nameA.compareTo(nameB);
           }
         });
+
+        for (var doc in foodDocs) {
+          DateTime expirationDate = DateTime.tryParse(doc['expirationDate'] ?? '') ?? DateTime.now();
+          String foodName = doc['foodName'] ?? 'No Name';
+          checkFoodExpiry(expirationDate, foodName);
+        }
 
         return ListView.builder(
           padding: const EdgeInsets.only(left: 23),

@@ -382,6 +382,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return false;
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: eggShell,
         body: Column(
           children: <Widget>[

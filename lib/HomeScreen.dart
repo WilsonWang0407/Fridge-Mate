@@ -27,12 +27,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _initializeUserData() async {
-    await _fetchUserName();
-    await _loadFridgeButtons();
-    setState(() {
-      isLoading = false;
-    });
-  }
+  await Future.wait([
+    _fetchUserName(),
+    _loadFridgeButtons(),
+  ]);
+  setState(() {
+    isLoading = false;
+  });
+}
 
   Future<void> _fetchUserName() async {
     final user = FirebaseAuth.instance.currentUser;
