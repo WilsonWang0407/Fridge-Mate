@@ -416,7 +416,7 @@ class _EditFoodScreenState extends State<EditFoodScreen> {
         return false;
       },
       child: Scaffold(
-         resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: true,
         backgroundColor: eggShell,
         body: SingleChildScrollView(
           child: Padding(

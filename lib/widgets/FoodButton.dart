@@ -22,7 +22,7 @@ class FoodButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime? expDate = _parseDateString(expirationDate);
-    String daysMessage = expDate != null ? _calculateDaysUntilExpiration(expDate) : 'Invalid date';
+    Widget daysMessageWidget = expDate != null ? _buildDaysMessage(expDate) : Text('Invalid date', style: centerBarInputTextStyle);
 
     return GestureDetector(
       onTap: onPressed,
@@ -72,10 +72,7 @@ class FoodButton extends StatelessWidget {
                     isOpened ? 'Is Opened: Yes' : 'Is Opened: No',
                     style: centerBarInputTextStyle,
                   ),
-                  Text(
-                    daysMessage,
-                    style: centerBarInputTextStyle,
-                  ),
+                  daysMessageWidget,
                 ],
               ),
             ),
@@ -94,8 +91,37 @@ class FoodButton extends StatelessWidget {
     }
   }
 
-  String _calculateDaysUntilExpiration(DateTime expDate) {
-    int days = expDate.difference(DateTime.now()).inDays + 1;
-    return days >= 0 ? 'Expire in $days day(s)' : 'Expired';
+  Widget _buildDaysMessage(DateTime expDate) {
+    // 将当前日期和过期日期都设置为当天的00:00时间
+    DateTime currentDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    DateTime expirationDateAtMidnight = DateTime(expDate.year, expDate.month, expDate.day);
+
+    // 计算日期差异
+    int days = expirationDateAtMidnight.difference(currentDate).inDays;
+
+    // 处理不同的情况
+    if (days == 0) {
+      return Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(text: 'Expire today', style: centerBarInputTextStyle),
+          ],
+        ),
+      );
+    } else if (days > 0 && days <= 10) {
+      return Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(text: 'Expire in ', style: centerBarInputTextStyle),
+            TextSpan(text: '$days', style: centerBarInputTextStyle.copyWith(color: sunset, fontWeight: FontWeight.w900)),
+            TextSpan(text: ' day(s)', style: centerBarInputTextStyle),
+          ],
+        ),
+      );
+    } else if (days > 10) {
+      return Text('Expire in $days day(s)', style: centerBarInputTextStyle);
+    } else {
+      return Text('Expired', style: centerBarInputTextStyle);
+    }
   }
 }

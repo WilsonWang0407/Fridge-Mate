@@ -7,26 +7,32 @@ import 'MyRecipesScreen.dart';
 import 'ProfileScreen.dart';
 import 'firebase_options.dart';
 import 'helpers/Constants.dart';
+import 'notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  final notificationService = NotificationService();
+  await NotificationService().init();
+  await NotificationService().requestIOSPermissions();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(FridgeMate());
+  runApp(FridgeMate(notificationService: notificationService));
 }
 
 class FridgeMate extends StatelessWidget {
-  FridgeMate({super.key});
+  final NotificationService notificationService;
+
+  FridgeMate({Key? key, required this.notificationService}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      navigatorKey: notificationService.navigatorKey,
       home: AuthenticationWrapper(),
       routes: {
         homeScreenTag: (context) => const HomeScreen(),
